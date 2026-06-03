@@ -312,6 +312,12 @@
     [data-theme="dark"] .form-notice.success { background: #0f3d2a; color: #4ade80; }
     [data-theme="dark"] .form-notice.error   { background: #3d0f0f; color: #f87171; }
 
+    /* ── Disqus comments ──────────────────────────────────────── */
+    #disqus_thread {
+      margin-top: 0;
+      padding: 4px 0 2rem;
+    }
+
     @media (max-width: 480px) {
       .cards { grid-template-columns: 1fr 1fr; }
       .form-row { grid-template-columns: 1fr; }
@@ -404,6 +410,11 @@
     <button type="submit" class="submit-btn" id="submit-btn">Send message</button>
     <p class="form-notice" id="form-notice"></p>
   </form>
+
+  <hr class="divider" />
+
+  <p class="section-title">Comments</p>
+  <div id="disqus_thread"></div>
 </div>
 
 <script>
@@ -450,6 +461,12 @@
     const next = current === 'dark' ? 'light' : 'dark';
     localStorage.setItem('theme', next);
     applyTheme(next);
+    if (typeof DISQUS !== 'undefined') {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    }
   }
 
   (function initTheme() {
@@ -572,5 +589,20 @@
     });
   }
 </script>
+
+<script>
+  var disqus_config = function () {
+    this.page.url = window.location.href;
+    this.page.identifier = 'fast-food-calorie-counter-v1';
+    this.page.color_scheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  };
+  (function () {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://productbuilder-oz1dbbgxft.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </body>
 </html>
