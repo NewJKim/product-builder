@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fast Food Calorie Counter</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f5f3;
+      color: #1a1a1a;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 1rem;
+    }
+
+    .card {
+      background: #ebebea;
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    .card p:first-child {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 4px;
+    }
+
+    .card p:last-child {
+      font-size: 24px;
+      font-weight: 500;
+    }
+
+    .progress-wrap {
+      background: #ddddd9;
+      border-radius: 8px;
+      height: 8px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #1D9E75;
+      border-radius: 8px;
+      transition: width 0.3s, background 0.3s;
+    }
+
+    .row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    select, input[type="text"], input[type="number"] {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 14px;
+      background: #fff;
+      color: #1a1a1a;
+      outline: none;
+      height: 36px;
+    }
+
+    select:focus, input:focus {
+      border-color: #888;
+    }
+
+    button {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 0 14px;
+      font-size: 14px;
+      background: #fff;
+      color: #1a1a1a;
+      cursor: pointer;
+      height: 36px;
+      white-space: nowrap;
+    }
+
+    button:hover { background: #f0f0ee; }
+    button:active { transform: scale(0.98); }
+
+    #brand-select { flex: 1; min-width: 120px; }
+    #item-select  { flex: 2; min-width: 160px; }
+    #custom-name  { flex: 2; }
+    #custom-cal   { flex: 1; min-width: 80px; }
+
+    .item-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      border: 0.5px solid #ddd;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 6px;
+    }
+
+    .item-row span:first-child { flex: 1; font-size: 14px; }
+    .item-row .kcal { font-size: 14px; font-weight: 500; min-width: 70px; text-align: right; }
+    .item-row .del {
+      border: none;
+      background: none;
+      color: #999;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 0 4px;
+      line-height: 1;
+      height: auto;
+    }
+    .item-row .del:hover { color: #e24b4a; background: none; }
+
+    .goal-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 1rem;
+    }
+
+    .goal-row label { font-size: 13px; color: #666; white-space: nowrap; }
+    #goal-input { width: 90px; }
+    #clear-btn { margin-left: auto; }
+
+    @media (max-width: 480px) {
+      .cards { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Fast Food Calorie Counter</h1>
+
+  <div class="cards">
+    <div class="card">
+      <p>Total calories</p>
+      <p id="total-cal">0</p>
+    </div>
+    <div class="card">
+      <p>Daily goal</p>
+      <p id="goal-display">2,000</p>
+    </div>
+    <div class="card">
+      <p>Remaining</p>
+      <p id="remaining">2,000</p>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div id="progress-bar"></div>
+  </div>
+
+  <div class="row">
+    <select id="brand-select">
+      <option value="">Brand</option>
+      <option>Panda Express</option>
+      <option>Subway</option>
+    </select>
+    <select id="item-select">
+      <option value="">Select item</option>
+    </select>
+    <button onclick="addItem()">Add</button>
+  </div>
+
+  <div class="row">
+    <input type="text" id="custom-name" placeholder="Custom item name" />
+    <input type="number" id="custom-cal" placeholder="kcal" min="0" />
+    <button onclick="addCustom()">Add</button>
+  </div>
+
+  <div id="item-list"></div>
+
+  <div class="goal-row">
+    <label>Daily goal:</label>
+    <input type="number" id="goal-input" value="2000" min="500" max="5000" step="50" />
+    <button onclick="updateGoal()">Set</button>
+    <button id="clear-btn" onclick="clearAll()">Clear all</button>
+  </div>
+</div>
+
+<script>
+  const menu = {
+    "Panda Express": [
+      ["Item 1 (placeholder)", 0],
+      ["Item 2 (placeholder)", 0],
+      ["Item 3 (placeholder)", 0]
+    ],
+    "Subway": [
+      ["Item 1 (placeholder)", 0],
+      ["Item 2 (placeholder)", 0],
+      ["Item 3 (placeholder)", 0]
+    ]
+  };
+
+  let goal = 2000;
+  let items = [];
+
+  document.getElementById('brand-select').addEventListener('change', function () {
+    const sel = document.getElementById('item-select');
+    sel.innerHTML = '<option value="">Select item</option>';
+    const brand = this.value;
+    if (menu[brand]) {
+      menu[brand].forEach(([name, cal]) => {
+        const o = document.createElement('option');
+        o.value = cal;
+        o.textContent = name + ' — ' + cal + ' kcal';
+        sel.appendChild(o);
+      });
+    }
+  });
+
+  function addItem() {
+    const brand = document.getElementById('brand-select').value;
+    const sel = document.getElementById('item-select');
+    const cal = parseInt(sel.value);
+    const name = sel.options[sel.selectedIndex]?.text?.split(' — ')[0];
+    if (!brand || !cal || !name) return;
+    items.push({ name: brand + ': ' + name, cal });
+    render();
+  }
+
+  function addCustom() {
+    const name = document.getElementById('custom-name').value.trim();
+    const cal = parseInt(document.getElementById('custom-cal').value);
+    if (!name || !cal || cal <= 0) return;
+    items.push({ name, cal });
+    document.getElementById('custom-name').value = '';
+    document.getElementById('custom-cal').value = '';
+    render();
+  }
+
+  function removeItem(i) {
+    items.splice(i, 1);
+    render();
+  }
+
+  function updateGoal() {
+    const v = parseInt(document.getElementById('goal-input').value);
+    if (v >= 500) { goal = v; render(); }
+  }
+
+  function clearAll() {
+    items = [];
+    render();
+  }
+
+  function render() {
+    const total = items.reduce((s, x) => s + x.cal, 0);
+    const remaining = goal - total;
+    const pct = Math.min(100, Math.round(total / goal * 100));
+
+    document.getElementById('total-cal').textContent = total.toLocaleString();
+    document.getElementById('goal-display').textContent = goal.toLocaleString();
+    document.getElementById('remaining').textContent = remaining.toLocaleString();
+    document.getElementById('remaining').style.color = remaining < 0 ? '#e24b4a' : '#1a1a1a';
+
+    const bar = document.getElementById('progress-bar');
+    bar.style.width = pct + '%';
+    bar.style.background = pct >= 100 ? '#E24B4A' : pct >= 80 ? '#BA7517' : '#1D9E75';
+
+    const list = document.getElementById('item-list');
+    list.innerHTML = '';
+    items.forEach((item, i) => {
+      const row = document.createElement('div');
+      row.className = 'item-row';
+      row.innerHTML =
+        '<span>' + item.name + '</span>' +
+        '<span class="kcal">' + item.cal.toLocaleString() + ' kcal</span>' +
+        '<button class="del" onclick="removeItem(' + i + ')">×</button>';
+      list.appendChild(row);
+    });
+  }
+</script>
+</body>
+</html>
