@@ -1,24 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fast Food Calorie Counter</title>
   <style>
+    :root {
+      --bg: #f5f5f3;
+      --bg-card: #ebebea;
+      --bg-input: #fff;
+      --bg-item: #fff;
+      --bg-progress: #ddddd9;
+      --bg-btn-hover: #f0f0ee;
+      --text: #1a1a1a;
+      --text-sub: #666;
+      --border: #ccc;
+      --border-item: #ddd;
+    }
+
+    [data-theme="dark"] {
+      --bg: #18181a;
+      --bg-card: #27272b;
+      --bg-input: #27272b;
+      --bg-item: #27272b;
+      --bg-progress: #38383d;
+      --bg-btn-hover: #32323a;
+      --text: #e8e8e6;
+      --text-sub: #999;
+      --border: #44444a;
+      --border-item: #38383d;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f5f5f3;
-      color: #1a1a1a;
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
       padding: 2rem 1rem;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
     }
 
     h1 {
       font-size: 22px;
       font-weight: 500;
-      margin-bottom: 1.5rem;
+    }
+
+    .theme-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0 12px;
+      font-size: 13px;
+      background: var(--bg-input);
+      color: var(--text);
+      cursor: pointer;
+      height: 32px;
+      white-space: nowrap;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+
+    .theme-btn:hover { background: var(--bg-btn-hover); }
+    .theme-btn:active { transform: scale(0.98); }
+
+    .theme-btn svg {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
     }
 
     .container {
@@ -34,14 +92,15 @@
     }
 
     .card {
-      background: #ebebea;
+      background: var(--bg-card);
       border-radius: 8px;
       padding: 1rem;
+      transition: background 0.2s;
     }
 
     .card p:first-child {
       font-size: 13px;
-      color: #666;
+      color: var(--text-sub);
       margin-bottom: 4px;
     }
 
@@ -51,11 +110,12 @@
     }
 
     .progress-wrap {
-      background: #ddddd9;
+      background: var(--bg-progress);
       border-radius: 8px;
       height: 8px;
       margin-bottom: 1.5rem;
       overflow: hidden;
+      transition: background 0.2s;
     }
 
     #progress-bar {
@@ -74,14 +134,15 @@
     }
 
     select, input[type="text"], input[type="number"] {
-      border: 1px solid #ccc;
+      border: 1px solid var(--border);
       border-radius: 8px;
       padding: 8px 12px;
       font-size: 14px;
-      background: #fff;
-      color: #1a1a1a;
+      background: var(--bg-input);
+      color: var(--text);
       outline: none;
       height: 36px;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
     }
 
     select:focus, input:focus {
@@ -89,18 +150,19 @@
     }
 
     button {
-      border: 1px solid #ccc;
+      border: 1px solid var(--border);
       border-radius: 8px;
       padding: 0 14px;
       font-size: 14px;
-      background: #fff;
-      color: #1a1a1a;
+      background: var(--bg-input);
+      color: var(--text);
       cursor: pointer;
       height: 36px;
       white-space: nowrap;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
     }
 
-    button:hover { background: #f0f0ee; }
+    button:hover { background: var(--bg-btn-hover); }
     button:active { transform: scale(0.98); }
 
     #brand-select { flex: 1; min-width: 120px; }
@@ -112,11 +174,12 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      background: #fff;
-      border: 0.5px solid #ddd;
+      background: var(--bg-item);
+      border: 0.5px solid var(--border-item);
       border-radius: 8px;
       padding: 10px 14px;
       margin-bottom: 6px;
+      transition: background 0.2s, border-color 0.2s;
     }
 
     .item-row span:first-child { flex: 1; font-size: 14px; }
@@ -124,7 +187,7 @@
     .item-row .del {
       border: none;
       background: none;
-      color: #999;
+      color: var(--text-sub);
       cursor: pointer;
       font-size: 18px;
       padding: 0 4px;
@@ -140,7 +203,7 @@
       margin-top: 1rem;
     }
 
-    .goal-row label { font-size: 13px; color: #666; white-space: nowrap; }
+    .goal-row label { font-size: 13px; color: var(--text-sub); white-space: nowrap; }
     #goal-input { width: 90px; }
     #clear-btn { margin-left: auto; }
 
@@ -151,7 +214,16 @@
 </head>
 <body>
 <div class="container">
-  <h1>Fast Food Calorie Counter</h1>
+  <div class="header">
+    <h1>Fast Food Calorie Counter</h1>
+    <button class="theme-btn" onclick="toggleTheme()" id="theme-btn" aria-label="Toggle theme">
+      <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <!-- moon icon (shown in light mode) -->
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+      <span id="theme-label">Dark</span>
+    </button>
+  </div>
 
   <div class="cards">
     <div class="card">
@@ -217,6 +289,43 @@
   let goal = 2000;
   let items = [];
 
+  // ── Theme ──────────────────────────────────────────────────────────────────
+
+  const SUN_ICON = `<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>`;
+  const MOON_ICON = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const icon = document.getElementById('theme-icon');
+    const label = document.getElementById('theme-label');
+    if (theme === 'dark') {
+      icon.innerHTML = SUN_ICON;
+      label.textContent = 'Light';
+    } else {
+      icon.innerHTML = MOON_ICON;
+      label.textContent = 'Dark';
+    }
+    document.getElementById('remaining').style.color =
+      document.getElementById('remaining').textContent.startsWith('-')
+        ? '#e24b4a'
+        : 'var(--text)';
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', next);
+    applyTheme(next);
+  }
+
+  (function initTheme() {
+    const saved = localStorage.getItem('theme');
+    const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    applyTheme(saved || preferred);
+  })();
+
+  // ── App logic ──────────────────────────────────────────────────────────────
+
   document.getElementById('brand-select').addEventListener('change', function () {
     const sel = document.getElementById('item-select');
     sel.innerHTML = '<option value="">Select item</option>';
@@ -273,8 +382,10 @@
 
     document.getElementById('total-cal').textContent = total.toLocaleString();
     document.getElementById('goal-display').textContent = goal.toLocaleString();
-    document.getElementById('remaining').textContent = remaining.toLocaleString();
-    document.getElementById('remaining').style.color = remaining < 0 ? '#e24b4a' : '#1a1a1a';
+
+    const remEl = document.getElementById('remaining');
+    remEl.textContent = remaining.toLocaleString();
+    remEl.style.color = remaining < 0 ? '#e24b4a' : 'var(--text)';
 
     const bar = document.getElementById('progress-bar');
     bar.style.width = pct + '%';
