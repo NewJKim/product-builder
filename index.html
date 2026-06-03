@@ -207,8 +207,114 @@
     #goal-input { width: 90px; }
     #clear-btn { margin-left: auto; }
 
+    /* ── Partnership form ─────────────────────────────────────── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border-item);
+      margin: 2.5rem 0;
+      transition: border-color 0.2s;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .section-desc {
+      font-size: 13px;
+      color: var(--text-sub);
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 10px;
+    }
+
+    .form-group label {
+      font-size: 13px;
+      color: var(--text-sub);
+    }
+
+    .form-group input,
+    .form-group textarea {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 14px;
+      background: var(--bg-input);
+      color: var(--text);
+      outline: none;
+      width: 100%;
+      font-family: inherit;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+
+    .form-group input { height: 36px; }
+
+    .form-group textarea {
+      height: 96px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus { border-color: #888; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      height: 38px;
+      margin-top: 6px;
+      background: #1D9E75;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, opacity 0.2s;
+    }
+
+    .submit-btn:hover { background: #198f68; }
+    .submit-btn:active { transform: scale(0.98); }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .form-notice {
+      font-size: 13px;
+      text-align: center;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .form-notice.success {
+      display: block;
+      background: #d1f5e8;
+      color: #0f6b48;
+    }
+
+    .form-notice.error {
+      display: block;
+      background: #fde8e8;
+      color: #9b1c1c;
+    }
+
+    [data-theme="dark"] .form-notice.success { background: #0f3d2a; color: #4ade80; }
+    [data-theme="dark"] .form-notice.error   { background: #3d0f0f; color: #f87171; }
+
     @media (max-width: 480px) {
       .cards { grid-template-columns: 1fr 1fr; }
+      .form-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -270,6 +376,34 @@
     <button onclick="updateGoal()">Set</button>
     <button id="clear-btn" onclick="clearAll()">Clear all</button>
   </div>
+
+  <hr class="divider" />
+
+  <p class="section-title">Partnership Inquiry</p>
+  <p class="section-desc">Interested in working together? Send us a message and we'll get back to you.</p>
+
+  <form id="contact-form" onsubmit="submitForm(event)">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="f-name">Name</label>
+        <input type="text" id="f-name" name="name" placeholder="Jane Kim" required />
+      </div>
+      <div class="form-group">
+        <label for="f-email">Email</label>
+        <input type="email" id="f-email" name="email" placeholder="jane@company.com" required />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="f-company">Company (optional)</label>
+      <input type="text" id="f-company" name="company" placeholder="Acme Corp" />
+    </div>
+    <div class="form-group">
+      <label for="f-message">Message</label>
+      <textarea id="f-message" name="message" placeholder="Tell us about your partnership idea..." required></textarea>
+    </div>
+    <button type="submit" class="submit-btn" id="submit-btn">Send message</button>
+    <p class="form-notice" id="form-notice"></p>
+  </form>
 </div>
 
 <script>
@@ -374,6 +508,40 @@
     items = [];
     render();
   }
+
+  // ── Partnership form ───────────────────────────────────────────────────────
+
+  async function submitForm(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submit-btn');
+    const notice = document.getElementById('form-notice');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    notice.className = 'form-notice';
+
+    try {
+      const res = await fetch('https://formspree.io/f/xbdejopp', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(e.target)
+      });
+      if (res.ok) {
+        notice.className = 'form-notice success';
+        notice.textContent = 'Message sent! We\'ll be in touch soon.';
+        e.target.reset();
+      } else {
+        throw new Error();
+      }
+    } catch {
+      notice.className = 'form-notice error';
+      notice.textContent = 'Something went wrong. Please try again.';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Send message';
+    }
+  }
+
+  // ── App logic ──────────────────────────────────────────────────────────────
 
   function render() {
     const total = items.reduce((s, x) => s + x.cal, 0);
