@@ -258,8 +258,7 @@
       transition: background 0.2s, border-color 0.2s;
     }
 
-    .item-row span:first-child { flex: 1; font-size: 14px; }
-    .item-row .kcal { font-size: 14px; font-weight: 500; min-width: 70px; text-align: right; }
+    .item-row .kcal { font-size: 14px; font-weight: 500; min-width: 70px; text-align: right; white-space: nowrap; }
     .item-row .del {
       border: none;
       background: none;
@@ -527,9 +526,52 @@
       line-height: 1.5;
     }
 
+    /* ── Macro summary cards ───────────────────────────────────── */
+    .macro-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    .macro-card {
+      background: var(--bg-card);
+      border-radius: 10px;
+      padding: 0.65rem 1rem;
+      transition: background 0.2s;
+    }
+
+    .macro-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 2px;
+    }
+
+    .macro-val { font-size: 20px; font-weight: 600; }
+
+    .lbl-fat     { color: #D97706; }
+    .lbl-protein { color: #2563EB; }
+    .lbl-carbs   { color: #7C3AED; }
+
+    [data-theme="dark"] .lbl-fat     { color: #FBBF24; }
+    [data-theme="dark"] .lbl-protein { color: #60A5FA; }
+    [data-theme="dark"] .lbl-carbs   { color: #A78BFA; }
+
+    /* ── Item row macros ───────────────────────────────────────── */
+    .item-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+    .item-name { font-size: 14px; }
+    .item-macros { font-size: 11px; color: var(--text-sub); }
+
+    /* ── Custom macro inputs ───────────────────────────────────── */
+    .row-macros { margin-top: -4px; }
+    #custom-fat, #custom-protein, #custom-carbs { flex: 1; min-width: 70px; }
+
     /* ── Responsive ────────────────────────────────────────────── */
     @media (max-width: 540px) {
       .cards { grid-template-columns: 1fr 1fr; }
+      .macro-cards { grid-template-columns: repeat(3, 1fr); }
       .form-row { grid-template-columns: 1fr; }
       .feature-grid { grid-template-columns: 1fr; }
     }
@@ -588,6 +630,21 @@
       <div id="progress-bar"></div>
     </div>
 
+    <div class="macro-cards">
+      <div class="macro-card">
+        <p class="macro-label lbl-fat">Fat</p>
+        <p class="macro-val" id="total-fat">0<span style="font-size:13px;font-weight:400">g</span></p>
+      </div>
+      <div class="macro-card">
+        <p class="macro-label lbl-protein">Protein</p>
+        <p class="macro-val" id="total-protein">0<span style="font-size:13px;font-weight:400">g</span></p>
+      </div>
+      <div class="macro-card">
+        <p class="macro-label lbl-carbs">Carbs</p>
+        <p class="macro-val" id="total-carbs">0<span style="font-size:13px;font-weight:400">g</span></p>
+      </div>
+    </div>
+
     <div class="row">
       <select id="brand-select">
         <option value="">Restaurant</option>
@@ -606,6 +663,11 @@
       <input type="text" id="custom-name" placeholder="Custom item name" />
       <input type="number" id="custom-cal" placeholder="kcal" min="0" />
       <button onclick="addCustom()">Add</button>
+    </div>
+    <div class="row row-macros">
+      <input type="number" id="custom-fat" placeholder="Fat (g)" min="0" />
+      <input type="number" id="custom-protein" placeholder="Protein (g)" min="0" />
+      <input type="number" id="custom-carbs" placeholder="Carbs (g)" min="0" />
     </div>
 
     <div id="item-list"></div>
@@ -774,53 +836,54 @@
 
 <!-- ── Scripts ───────────────────────────────────────────────────── -->
 <script>
+  // [name, kcal, fat_g, protein_g, carbs_g]
   const menu = {
     "McDonald's": [
-      ["Big Mac", 590],
-      ["Quarter Pounder with Cheese", 530],
-      ["McDouble", 400],
-      ["Filet-O-Fish", 390],
-      ["Egg McMuffin", 310],
-      ["Chicken McNuggets 10 pc", 420],
-      ["Large French Fries", 490],
-      ["Medium French Fries", 320],
-      ["Apple Pie", 240],
-      ["Large Coca-Cola", 290]
+      ["Big Mac",                     590, 34,  27, 45],
+      ["Quarter Pounder with Cheese", 530, 27,  31, 42],
+      ["McDouble",                    400, 20,  22, 33],
+      ["Filet-O-Fish",                390, 19,  16, 38],
+      ["Egg McMuffin",                310, 13,  17, 30],
+      ["Chicken McNuggets 10 pc",     420, 25,  22, 27],
+      ["Large French Fries",          490, 23,   7, 64],
+      ["Medium French Fries",         320, 15,   4, 44],
+      ["Apple Pie",                   240, 11,   2, 34],
+      ["Large Coca-Cola",             290,  0,   0, 79]
     ],
     "Panda Express": [
-      ["Orange Chicken", 490],
-      ["Beijing Beef", 470],
-      ["Honey Walnut Shrimp", 360],
-      ["Kung Pao Chicken", 290],
-      ["Mushroom Chicken", 220],
-      ["Broccoli Beef", 150],
-      ["Mixed Vegetables", 80],
-      ["Fried Rice", 520],
-      ["Chow Mein", 510],
-      ["White Steamed Rice", 380],
-      ["Spring Roll (1)", 130],
-      ["Cream Cheese Rangoon 3 pc", 190]
+      ["Orange Chicken",          490, 23, 26, 51],
+      ["Beijing Beef",            470, 21, 14, 57],
+      ["Honey Walnut Shrimp",     360, 23, 13, 27],
+      ["Kung Pao Chicken",        290, 19, 16, 16],
+      ["Mushroom Chicken",        220, 13, 13, 15],
+      ["Broccoli Beef",           150,  7,  9, 13],
+      ["Mixed Vegetables",         80,  3,  3, 13],
+      ["Fried Rice",              520, 16, 11, 85],
+      ["Chow Mein",               510, 22, 14, 67],
+      ["White Steamed Rice",      380,  0,  7, 87],
+      ["Spring Roll (1)",         130,  6,  3, 15],
+      ["Cream Cheese Rangoon 3pc",190,  8,  5, 24]
     ],
     "Subway": [
-      ["6\" Italian BMT", 410],
-      ["6\" Meatball Marinara", 480],
-      ["6\" Tuna", 480],
-      ["6\" Steak & Cheese", 380],
-      ["6\" Chicken Teriyaki", 370],
-      ["6\" BLT", 310],
-      ["6\" Turkey Breast", 280],
-      ["6\" Veggie Delite", 230],
-      ["Chocolate Chip Cookie", 220]
+      ["6\" Italian BMT",       410, 14, 22, 47],
+      ["6\" Meatball Marinara", 480, 19, 23, 55],
+      ["6\" Tuna",              480, 25, 20, 44],
+      ["6\" Steak & Cheese",    380, 10, 26, 47],
+      ["6\" Chicken Teriyaki",  370,  5, 26, 54],
+      ["6\" BLT",               310, 10, 14, 39],
+      ["6\" Turkey Breast",     280,  3, 18, 45],
+      ["6\" Veggie Delite",     230,  3,  9, 43],
+      ["Chocolate Chip Cookie", 220, 10,  2, 30]
     ],
     "Chipotle": [
-      ["Chicken Burrito", 705],
-      ["Steak Burrito", 745],
-      ["Sofritas Burrito", 680],
-      ["Chicken Burrito Bowl", 665],
-      ["Chicken Tacos (3)", 525],
-      ["Chicken Salad", 520],
-      ["Chips & Guacamole", 770],
-      ["Queso Blanco (side)", 120]
+      ["Chicken Burrito",      705, 23, 51, 76],
+      ["Steak Burrito",        745, 24, 47, 76],
+      ["Sofritas Burrito",     680, 23, 30, 84],
+      ["Chicken Burrito Bowl", 665, 23, 51, 51],
+      ["Chicken Tacos (3)",    525, 22, 37, 47],
+      ["Chicken Salad",        520, 24, 46, 30],
+      ["Chips & Guacamole",    770, 46,  8, 84],
+      ["Queso Blanco (side)",  120,  8,  4,  8]
     ]
   };
 
@@ -868,9 +931,9 @@
     const sel = document.getElementById('item-select');
     sel.innerHTML = '<option value="">Select item</option>';
     if (menu[this.value]) {
-      menu[this.value].forEach(([name, cal]) => {
+      menu[this.value].forEach(([name, cal, fat, protein, carbs], i) => {
         const o = document.createElement('option');
-        o.value = cal;
+        o.value = JSON.stringify({ cal, fat, protein, carbs });
         o.textContent = name + ' — ' + cal + ' kcal';
         sel.appendChild(o);
       });
@@ -880,20 +943,23 @@
   function addItem() {
     const brand = document.getElementById('brand-select').value;
     const sel = document.getElementById('item-select');
-    const cal = parseInt(sel.value);
-    const name = sel.options[sel.selectedIndex]?.text?.split(' — ')[0];
-    if (!brand || !cal || !name) return;
-    items.push({ name: brand + ': ' + name, cal });
+    if (!brand || !sel.value) return;
+    const { cal, fat, protein, carbs } = JSON.parse(sel.value);
+    const name = sel.options[sel.selectedIndex].text.split(' — ')[0];
+    items.push({ name: brand + ': ' + name, cal, fat, protein, carbs });
     render();
   }
 
   function addCustom() {
     const name = document.getElementById('custom-name').value.trim();
-    const cal = parseInt(document.getElementById('custom-cal').value);
-    if (!name || !cal || cal <= 0) return;
-    items.push({ name, cal });
-    document.getElementById('custom-name').value = '';
-    document.getElementById('custom-cal').value = '';
+    const cal  = parseInt(document.getElementById('custom-cal').value) || 0;
+    if (!name || cal <= 0) return;
+    const fat     = parseInt(document.getElementById('custom-fat').value)     || 0;
+    const protein = parseInt(document.getElementById('custom-protein').value) || 0;
+    const carbs   = parseInt(document.getElementById('custom-carbs').value)   || 0;
+    items.push({ name, cal, fat, protein, carbs });
+    ['custom-name','custom-cal','custom-fat','custom-protein','custom-carbs']
+      .forEach(id => document.getElementById(id).value = '');
     render();
   }
 
@@ -907,12 +973,18 @@
   function clearAll() { items = []; render(); }
 
   function render() {
-    const total = items.reduce((s, x) => s + x.cal, 0);
+    const total   = items.reduce((s, x) => s + x.cal,     0);
+    const totFat  = items.reduce((s, x) => s + x.fat,     0);
+    const totProt = items.reduce((s, x) => s + x.protein, 0);
+    const totCarb = items.reduce((s, x) => s + x.carbs,   0);
     const remaining = goal - total;
     const pct = Math.min(100, Math.round(total / goal * 100));
 
-    document.getElementById('total-cal').textContent = total.toLocaleString();
-    document.getElementById('goal-display').textContent = goal.toLocaleString();
+    document.getElementById('total-cal').textContent     = total.toLocaleString();
+    document.getElementById('goal-display').textContent  = goal.toLocaleString();
+    document.getElementById('total-fat').innerHTML       = totFat  + '<span style="font-size:13px;font-weight:400">g</span>';
+    document.getElementById('total-protein').innerHTML   = totProt + '<span style="font-size:13px;font-weight:400">g</span>';
+    document.getElementById('total-carbs').innerHTML     = totCarb + '<span style="font-size:13px;font-weight:400">g</span>';
 
     const remEl = document.getElementById('remaining');
     remEl.textContent = remaining.toLocaleString();
@@ -925,10 +997,17 @@
     const list = document.getElementById('item-list');
     list.innerHTML = '';
     items.forEach((item, i) => {
+      const hasMacros = item.fat || item.protein || item.carbs;
+      const macroStr = hasMacros
+        ? 'F ' + item.fat + 'g &middot; P ' + item.protein + 'g &middot; C ' + item.carbs + 'g'
+        : '';
       const row = document.createElement('div');
       row.className = 'item-row';
       row.innerHTML =
-        '<span>' + item.name + '</span>' +
+        '<div class="item-info">' +
+          '<span class="item-name">' + item.name + '</span>' +
+          (macroStr ? '<span class="item-macros">' + macroStr + '</span>' : '') +
+        '</div>' +
         '<span class="kcal">' + item.cal.toLocaleString() + ' kcal</span>' +
         '<button class="del" onclick="removeItem(' + i + ')">&#215;</button>';
       list.appendChild(row);
