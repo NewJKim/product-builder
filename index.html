@@ -966,11 +966,13 @@
   // [name, kcal, fat_g, protein_g, carbs_g]
   const pandaMenu = {
     meals: [
-      { name: "Bowl",          type: "meal",      entreeSlots: 1 },
-      { name: "Plate",         type: "meal",      entreeSlots: 2 },
-      { name: "Bigger Plate",  type: "meal",      entreeSlots: 3 },
+      { name: "Bowl",          type: "meal",    entreeSlots: 1 },
+      { name: "Plate",         type: "meal",    entreeSlots: 2 },
+      { name: "Bigger Plate",  type: "meal",    entreeSlots: 3 },
+      { name: "Cub Meal",      type: "single",  list: "cubMeals",   label: "Entree" },
       { name: "A La Carte",    type: "alacarte" },
-      { name: "Appetizers",    type: "appetizer" },
+      { name: "Appetizers",    type: "single",  list: "appetizers", label: "Item" },
+      { name: "Sauces",        type: "single",  list: "sauces",     label: "Sauce" },
     ],
     sides: [
       ["Chow Mein",          510, 22, 14, 67],
@@ -991,9 +993,26 @@
       ["Grilled Teriyaki Chicken", 300, 13, 36,  8],
     ],
     appetizers: [
-      ["Spring Roll (1 pc)",           130,  6,  3, 15],
+      ["Chicken Egg Roll (1 pc)",      200, 10,  6, 20],
       ["Cream Cheese Rangoon (3 pc)",  190,  8,  5, 24],
+      ["Chicken Potsticker (3 pc)",    160,  6,  6, 20],
+      ["Vegetable Spring Roll (2 pc)", 240, 14,  4, 24],
       ["Apple Pie Roll (2 pc)",        300, 10,  3, 49],
+    ],
+    cubMeals: [
+      ["Orange Chicken",           580, 17, 22, 84],
+      ["Grilled Teriyaki Chicken", 400, 16, 28, 36],
+      ["Broccoli Beef",            300,  7, 11, 49],
+    ],
+    sauces: [
+      ["Sweet & Sour Sauce",   70,  0, 0, 21],
+      ["Teriyaki Sauce",       70,  0, 0, 16],
+      ["Mandarin Teriyaki",    70,  0, 1, 15],
+      ["Plum Sauce",           15,  0, 0,  3],
+      ["Potsticker Sauce",     10,  0, 0,  3],
+      ["Chili Sauce",          10,  0, 0,  2],
+      ["Hot Mustard",          10,  1, 0,  0],
+      ["Soy Sauce",             5,  0, 0,  0],
     ],
   };
 
@@ -1107,12 +1126,6 @@
       '</optgroup>';
   }
 
-  function appetizerOptionsHTML() {
-    return '<option value="">Select appetizer</option>' +
-      pandaMenu.appetizers.map(([name, cal]) =>
-        `<option value="${name}">${name} — ${cal} kcal</option>`
-      ).join('');
-  }
 
   function renderSideSelects() {
     const wrap = document.getElementById('pe-side-selects');
@@ -1149,16 +1162,28 @@
           `<select id="pe-entree-${i}" class="pe-entree-col" onchange="updatePEPreview()">${entreeOptionsHTML()}</select>`;
         entreeRows.appendChild(div);
       }
-    } else {
+    } else if (meal.type === 'alacarte') {
       sideRow.hidden = true;
       entreeRows.innerHTML = '';
-      const optionsHTML = meal.type === 'alacarte' ? alcOptionsHTML() : appetizerOptionsHTML();
-      const label       = meal.type === 'alacarte' ? 'Item' : 'Item';
       const div = document.createElement('div');
       div.className = 'pe-row';
       div.innerHTML =
-        `<span class="pe-label">${label}</span>` +
-        `<select id="pe-single-item" class="pe-entree-col" onchange="updatePEPreview()">${optionsHTML}</select>`;
+        `<span class="pe-label">Item</span>` +
+        `<select id="pe-single-item" class="pe-entree-col" onchange="updatePEPreview()">${alcOptionsHTML()}</select>`;
+      entreeRows.appendChild(div);
+    } else {
+      // 'single' type: Cub Meal, Appetizers, Sauces
+      sideRow.hidden = true;
+      entreeRows.innerHTML = '';
+      const opts = `<option value="">Select ${meal.label.toLowerCase()}</option>` +
+        pandaMenu[meal.list].map(([name, cal]) =>
+          `<option value="${name}">${name} — ${cal} kcal</option>`
+        ).join('');
+      const div = document.createElement('div');
+      div.className = 'pe-row';
+      div.innerHTML =
+        `<span class="pe-label">${meal.label}</span>` +
+        `<select id="pe-single-item" class="pe-entree-col" onchange="updatePEPreview()">${opts}</select>`;
       entreeRows.appendChild(div);
     }
 
@@ -1232,12 +1257,11 @@
     let n;
     if (peCurrentMeal.type === 'alacarte') {
       const colonIdx = sel.value.indexOf(':');
-      const listType = sel.value.slice(0, colonIdx);
-      const itemName = sel.value.slice(colonIdx + 1);
-      const list = listType === 'entree' ? pandaMenu.entrees : pandaMenu.sides;
-      n = getNutrition(itemName, list, 1);
+      const list = sel.value.slice(0, colonIdx) === 'entree' ? pandaMenu.entrees : pandaMenu.sides;
+      n = getNutrition(sel.value.slice(colonIdx + 1), list, 1);
     } else {
-      n = getNutrition(sel.value, pandaMenu.appetizers, 1);
+      // 'single' type
+      n = getNutrition(sel.value, pandaMenu[peCurrentMeal.list], 1);
     }
 
     if (!n) return null;
