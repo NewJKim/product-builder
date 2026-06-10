@@ -853,8 +853,8 @@
       <tbody>
         <tr><td>Big Mac</td><td>McDonald's</td><td>590 kcal</td></tr>
         <tr><td>Large French Fries</td><td>McDonald's</td><td>490 kcal</td></tr>
-        <tr><td>Orange Chicken (serving)</td><td>Panda Express</td><td>490 kcal</td></tr>
-        <tr><td>Chow Mein</td><td>Panda Express</td><td>510 kcal</td></tr>
+        <tr><td>Orange Chicken (serving)</td><td>Panda Express</td><td>510 kcal</td></tr>
+        <tr><td>Chow Mein</td><td>Panda Express</td><td>600 kcal</td></tr>
         <tr><td>6" Italian BMT</td><td>Subway</td><td>410 kcal</td></tr>
         <tr><td>6" Turkey Breast</td><td>Subway</td><td>280 kcal</td></tr>
         <tr><td>Chicken Burrito</td><td>Chipotle</td><td>705 kcal</td></tr>
@@ -964,6 +964,7 @@
 <!-- ── Scripts ───────────────────────────────────────────────────── -->
 <script>
   // [name, kcal, fat_g, protein_g, carbs_g]
+  // Source: pandaexpress.com/nutritioninformation
   const pandaMenu = {
     meals: [
       { name: "Bowl",          type: "meal",    entreeSlots: 1 },
@@ -975,49 +976,83 @@
       { name: "Sauces",        type: "single",  list: "sauces",     label: "Sauce" },
     ],
     sides: [
-      ["Chow Mein",          510, 22, 14, 67],
-      ["Fried Rice",         520, 16, 11, 85],
-      ["White Steamed Rice", 380,  0,  7, 87],
-      ["Mixed Vegetables",    80,  3,  3, 13],
+      ["Chow Mein",          600, 23, 15,  94],
+      ["Fried Rice",         620, 19, 13, 101],
+      ["Chow Fun",           410,  9,  9,  73],
+      ["Super Greens",       130,  4,  9,  14],
+      ["White Steamed Rice", 520,  0, 10, 118],
     ],
     entrees: [
-      ["Orange Chicken",           490, 23, 26, 51],
-      ["Beijing Beef",             470, 21, 14, 57],
-      ["Honey Walnut Shrimp",      360, 23, 13, 27],
-      ["Kung Pao Chicken",         290, 19, 16, 16],
-      ["Mushroom Chicken",         220, 13, 13, 15],
-      ["Broccoli Beef",            150,  7,  9, 13],
-      ["Mixed Vegetables",          80,  3,  3, 13],
-      ["String Bean Chicken",      190,  9, 14, 15],
-      ["Black Pepper Chicken",     280, 17, 16, 17],
-      ["Grilled Teriyaki Chicken", 300, 13, 36,  8],
+      // Chicken
+      ["Orange Chicken",               510, 24, 16, 53],
+      ["Hot Orange Chicken",           550, 27, 17, 59],
+      ["Black Pepper Chicken",         280, 19, 13, 15],
+      ["Kung Pao Chicken",             320, 21, 17, 15],
+      ["Mushroom Chicken",             220, 14, 13, 10],
+      ["Grilled Teriyaki Chicken",     275, 10, 33, 14],
+      ["Teriyaki Chicken",             340, 13, 41, 14],
+      ["Potato Chicken",               190, 10,  8, 18],
+      // Chicken Breast
+      ["Honey Sesame Chicken Breast",  340, 15, 16, 35],
+      ["String Bean Chicken Breast",   210, 12, 12, 13],
+      ["Sweet & Sour Chicken Breast",  300, 12, 10, 40],
+      ["Sweetfire Chicken Breast",     360, 15, 15, 40],
+      // Beef
+      ["Beijing Beef",                 470, 27, 14, 46],
+      ["Black Pepper Sirloin Steak",   180,  6, 19, 12],
+      ["Broccoli Beef",                150,  6, 15, 12],
+      // Seafood
+      ["Honey Walnut Shrimp",          430, 28, 13, 32],
+      ["Steamed Ginger Fish",          200, 12, 15,  8],
+      ["Wok-Fired Shrimp",             190,  5, 17, 19],
+      // Vegetables
+      ["Eggplant Tofu",                340, 24,  7, 23],
+      ["Super Greens",                  90,  3,  6, 10],
     ],
     appetizers: [
-      ["Chicken Egg Roll (1 pc)",      200, 10,  6, 20],
-      ["Cream Cheese Rangoon (3 pc)",  190,  8,  5, 24],
-      ["Chicken Potsticker (3 pc)",    160,  6,  6, 20],
-      ["Vegetable Spring Roll (2 pc)", 240, 14,  4, 24],
-      ["Apple Pie Roll (2 pc)",        300, 10,  3, 49],
+      ["Chicken Egg Roll (1 pc)",      200, 10, 6, 20],
+      ["Chicken Potsticker (3 pc)",    160,  6, 6, 20],
+      ["Cream Cheese Rangoon (3 pc)",  190,  8, 5, 24],
+      ["Vegetable Spring Roll (2 pc)", 240, 14, 4, 24],
+      ["Apple Pie Roll",               150,  3, 2, 30],
     ],
     cubEntrees: [
-      ["Orange Chicken",           245, 12, 13, 26],
-      ["Grilled Teriyaki Chicken", 150,  7, 18,  4],
-      ["Broccoli Beef",             75,  4,  5,  7],
+      ["Orange Chicken",               380, 18, 14, 39],
+      ["Hot Orange Chicken",           415, 20, 13, 44],
+      ["Black Pepper Chicken",         200, 14, 10, 11],
+      ["Kung Pao Chicken",             220, 15, 12, 11],
+      ["Mushroom Chicken",             170, 11, 10,  8],
+      ["Grilled Teriyaki Chicken",     210,  8, 25, 11],
+      ["Teriyaki Chicken",             250, 10, 31, 10],
+      ["Potato Chicken",               140,  8,  6, 15],
+      ["Honey Sesame Chicken Breast",  250, 11, 12, 26],
+      ["String Bean Chicken Breast",   160,  9,  9, 10],
+      ["Sweet & Sour Chicken Breast",  270, 10,  9, 35],
+      ["Sweetfire Chicken Breast",     270, 11, 11, 30],
+      ["Beijing Beef",                 360, 20, 11, 35],
+      ["Black Pepper Sirloin Steak",   130,  5, 14,  9],
+      ["Broccoli Beef",                110,  5, 11,  9],
+      ["Honey Walnut Shrimp",          240, 15,  7, 17],
+      ["Steamed Ginger Fish",           70,  4,  5,  3],
+      ["Wok-Fired Shrimp",             140,  4, 13, 15],
+      ["Eggplant Tofu",                250, 18,  5, 17],
+      ["Super Greens",                  60,  2,  4,  7],
     ],
     cubSides: [
-      ["Chow Mein",          255, 11,  7, 34],
-      ["Fried Rice",         260,  8,  6, 43],
-      ["White Steamed Rice", 190,  0,  4, 44],
+      ["Chow Mein",          440, 19, 11, 57],
+      ["Fried Rice",         466, 13,  9, 76],
+      ["Chow Fun",           300,  6,  6, 53],
+      ["Super Greens",        90,  3,  6, 10],
+      ["White Steamed Rice", 390,  0,  8, 87],
     ],
     sauces: [
-      ["Sweet & Sour Sauce",   70,  0, 0, 21],
-      ["Teriyaki Sauce",       70,  0, 0, 16],
-      ["Mandarin Teriyaki",    70,  0, 1, 15],
-      ["Plum Sauce",           15,  0, 0,  3],
-      ["Potsticker Sauce",     10,  0, 0,  3],
-      ["Chili Sauce",          10,  0, 0,  2],
-      ["Hot Mustard",          10,  1, 0,  0],
-      ["Soy Sauce",             5,  0, 0,  0],
+      ["Sweet & Sour Sauce", 70, 0, 0, 21],
+      ["Teriyaki Sauce",     70, 0, 0, 16],
+      ["Chili Sauce",        10, 0, 0,  2],
+      ["Hot Mustard",        10, 1, 0,  0],
+      ["Potsticker Sauce",   10, 0, 0,  3],
+      ["Soy Sauce",           5, 0, 0,  0],
+      ["Fortune Cookie",     20, 0, 0,  5],
     ],
   };
 
@@ -1305,7 +1340,7 @@
         sideLabels.push('\xbd ' + n0, '\xbd ' + n1);
       }
 
-      const apple = { cal: 50, fat: 0, protein: 0, carbs: 13 };
+      const apple = { cal: 40, fat: 0, protein: 0, carbs: 10 };
       return {
         cal:     sideCal  + e.cal     + apple.cal,
         fat:     sideFat  + e.fat     + apple.fat,
