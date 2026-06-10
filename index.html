@@ -774,7 +774,7 @@
         <div class="pe-side-wrap">
           <div class="pe-toggle">
             <button class="pe-toggle-btn active" id="pe-btn-full" onclick="setSideMode('full')">Full</button>
-            <button class="pe-toggle-btn" id="pe-btn-half" onclick="setSideMode('half')">½ + ½</button>
+            <button class="pe-toggle-btn" id="pe-btn-half" onclick="setSideMode('half')">Half & Half</button>
           </div>
           <div id="pe-side-selects" class="pe-side-selects"></div>
         </div>
@@ -1102,12 +1102,14 @@
   let peSideMode = 'full';
   let peEntreeSlots = 0;
   let peCurrentMeal = null;
+  let peCurrentSideList = 'sides';
 
-  function sideOptionsHTML() {
+  function sideOptionsHTML(list, isHalf = false) {
     return '<option value="">Select side</option>' +
-      pandaMenu.sides.map(([name, cal]) =>
-        `<option value="${name}">${name} — ${cal} kcal</option>`
-      ).join('');
+      list.map(([name, cal]) => {
+        const displayCal = isHalf ? Math.round(cal / 2) : cal;
+        return `<option value="${name}">${name} — ${displayCal} kcal</option>`;
+      }).join('');
   }
 
   function entreeOptionsHTML() {
@@ -1133,13 +1135,14 @@
 
 
   function renderSideSelects() {
+    const list = pandaMenu[peCurrentSideList];
     const wrap = document.getElementById('pe-side-selects');
     if (peSideMode === 'full') {
-      wrap.innerHTML = `<select id="pe-side-0" onchange="updatePEPreview()">${sideOptionsHTML()}</select>`;
+      wrap.innerHTML = `<select id="pe-side-0" onchange="updatePEPreview()">${sideOptionsHTML(list, false)}</select>`;
     } else {
       wrap.innerHTML =
-        `<select id="pe-side-0" onchange="updatePEPreview()">${sideOptionsHTML()}</select>` +
-        `<select id="pe-side-1" onchange="updatePEPreview()">${sideOptionsHTML()}</select>`;
+        `<select id="pe-side-0" onchange="updatePEPreview()">${sideOptionsHTML(list, true)}</select>` +
+        `<select id="pe-side-1" onchange="updatePEPreview()">${sideOptionsHTML(list, true)}</select>`;
     }
   }
 
@@ -1151,6 +1154,7 @@
     builder.hidden = false;
 
     if (meal.type === 'meal') {
+      peCurrentSideList = 'sides';
       peEntreeSlots = meal.entreeSlots;
       peSideMode = 'full';
       document.getElementById('pe-btn-full').classList.add('active');
@@ -1168,23 +1172,18 @@
         entreeRows.appendChild(div);
       }
     } else if (meal.type === 'cubmeal') {
-      sideRow.style.display = 'none';
+      peCurrentSideList = 'cubSides';
+      peSideMode = 'full';
+      document.getElementById('pe-btn-full').classList.add('active');
+      document.getElementById('pe-btn-half').classList.remove('active');
+      sideRow.style.display = '';
+      renderSideSelects();
+
       entreeRows.innerHTML = '';
-
-      const sideDiv = document.createElement('div');
-      sideDiv.className = 'pe-row';
-      sideDiv.innerHTML = `<span class="pe-label">Side</span>` +
-        `<select id="pe-cub-side" class="pe-entree-col" onchange="updatePEPreview()">` +
-        `<option value="">Select side</option>` +
-        pandaMenu.cubSides.map(([name, cal]) =>
-          `<option value="${name}">${name} — ${cal} kcal</option>`
-        ).join('') + `</select>`;
-      entreeRows.appendChild(sideDiv);
-
       const entreeDiv = document.createElement('div');
       entreeDiv.className = 'pe-row';
       entreeDiv.innerHTML = `<span class="pe-label">Entree</span>` +
-        `<select id="pe-cub-entree" class="pe-entree-col" onchange="updatePEPreview()">` +
+        `<select id="pe-entree-0" class="pe-entree-col" onchange="updatePEPreview()">` +
         `<option value="">Select entree</option>` +
         pandaMenu.cubEntrees.map(([name, cal]) =>
           `<option value="${name}">${name} — ${cal} kcal</option>`
@@ -1279,19 +1278,40 @@
     }
 
     if (peCurrentMeal.type === 'cubmeal') {
-      const sideVal   = document.getElementById('pe-cub-side')?.value;
-      const entreeVal = document.getElementById('pe-cub-entree')?.value;
-      if (!sideVal || !entreeVal) return null;
-      const s = getNutrition(sideVal,   pandaMenu.cubSides,   1);
+      const entreeVal = document.getElementById('pe-entree-0')?.value;
+      if (!entreeVal) return null;
       const e = getNutrition(entreeVal, pandaMenu.cubEntrees, 1);
-      if (!s || !e) return null;
+      if (!e) return null;
+
+      let sideCal = 0, sideFat = 0, sideProt = 0, sideCarb = 0;
+      const sideLabels = [];
+
+      if (peSideMode === 'full') {
+        const name = document.getElementById('pe-side-0')?.value;
+        if (!name) return null;
+        const n = getNutrition(name, pandaMenu.cubSides, 1);
+        if (!n) return null;
+        sideCal = n.cal; sideFat = n.fat; sideProt = n.protein; sideCarb = n.carbs;
+        sideLabels.push(name);
+      } else {
+        const n0 = document.getElementById('pe-side-0')?.value;
+        const n1 = document.getElementById('pe-side-1')?.value;
+        if (!n0 || !n1) return null;
+        const a = getNutrition(n0, pandaMenu.cubSides, 0.5);
+        const b = getNutrition(n1, pandaMenu.cubSides, 0.5);
+        if (!a || !b) return null;
+        sideCal = a.cal + b.cal; sideFat = a.fat + b.fat;
+        sideProt = a.protein + b.protein; sideCarb = a.carbs + b.carbs;
+        sideLabels.push('\xbd ' + n0, '\xbd ' + n1);
+      }
+
       const apple = { cal: 50, fat: 0, protein: 0, carbs: 13 };
       return {
-        cal:     s.cal     + e.cal     + apple.cal,
-        fat:     s.fat     + e.fat     + apple.fat,
-        protein: s.protein + e.protein + apple.protein,
-        carbs:   s.carbs   + e.carbs   + apple.carbs,
-        label:   sideVal + ' + ' + entreeVal + ' + Apple Crisps',
+        cal:     sideCal  + e.cal     + apple.cal,
+        fat:     sideFat  + e.fat     + apple.fat,
+        protein: sideProt + e.protein + apple.protein,
+        carbs:   sideCarb + e.carbs   + apple.carbs,
+        label:   [...sideLabels, entreeVal, 'Apple Crisps'].join(' + '),
       };
     }
 
