@@ -769,7 +769,7 @@
     </div>
 
     <div id="pe-builder" class="pe-builder" hidden>
-      <div class="pe-row">
+      <div id="pe-side-row" class="pe-row">
         <span class="pe-label">Side</span>
         <div class="pe-side-wrap">
           <div class="pe-toggle">
@@ -966,9 +966,11 @@
   // [name, kcal, fat_g, protein_g, carbs_g]
   const pandaMenu = {
     meals: [
-      { name: "Bowl",          entreeSlots: 1 },
-      { name: "Plate",         entreeSlots: 2 },
-      { name: "Bigger Plate",  entreeSlots: 3 },
+      { name: "Bowl",          type: "meal",      entreeSlots: 1 },
+      { name: "Plate",         type: "meal",      entreeSlots: 2 },
+      { name: "Bigger Plate",  type: "meal",      entreeSlots: 3 },
+      { name: "A La Carte",    type: "alacarte" },
+      { name: "Appetizers",    type: "appetizer" },
     ],
     sides: [
       ["Chow Mein",          510, 22, 14, 67],
@@ -987,6 +989,11 @@
       ["String Bean Chicken",      190,  9, 14, 15],
       ["Black Pepper Chicken",     280, 17, 16, 17],
       ["Grilled Teriyaki Chicken", 300, 13, 36,  8],
+    ],
+    appetizers: [
+      ["Spring Roll (1 pc)",           130,  6,  3, 15],
+      ["Cream Cheese Rangoon (3 pc)",  190,  8,  5, 24],
+      ["Apple Pie Roll (2 pc)",        300, 10,  3, 49],
     ],
   };
 
@@ -1070,6 +1077,7 @@
 
   let peSideMode = 'full';
   let peEntreeSlots = 0;
+  let peCurrentMeal = null;
 
   function sideOptionsHTML() {
     return '<option value="">Select side</option>' +
@@ -1081,6 +1089,27 @@
   function entreeOptionsHTML() {
     return '<option value="">Select entree</option>' +
       pandaMenu.entrees.map(([name, cal]) =>
+        `<option value="${name}">${name} — ${cal} kcal</option>`
+      ).join('');
+  }
+
+  function alcOptionsHTML() {
+    return '<option value="">Select item</option>' +
+      '<optgroup label="Entrees">' +
+      pandaMenu.entrees.map(([name, cal]) =>
+        `<option value="entree:${name}">${name} — ${cal} kcal</option>`
+      ).join('') +
+      '</optgroup>' +
+      '<optgroup label="Sides">' +
+      pandaMenu.sides.map(([name, cal]) =>
+        `<option value="side:${name}">${name} — ${cal} kcal</option>`
+      ).join('') +
+      '</optgroup>';
+  }
+
+  function appetizerOptionsHTML() {
+    return '<option value="">Select appetizer</option>' +
+      pandaMenu.appetizers.map(([name, cal]) =>
         `<option value="${name}">${name} — ${cal} kcal</option>`
       ).join('');
   }
@@ -1097,23 +1126,39 @@
   }
 
   function renderPEBuilder(meal) {
-    peEntreeSlots = meal.entreeSlots;
-    peSideMode = 'full';
-    document.getElementById('pe-btn-full').classList.add('active');
-    document.getElementById('pe-btn-half').classList.remove('active');
-    document.getElementById('pe-builder').hidden = false;
-
-    renderSideSelects();
-
+    peCurrentMeal = meal;
+    const builder    = document.getElementById('pe-builder');
+    const sideRow    = document.getElementById('pe-side-row');
     const entreeRows = document.getElementById('pe-entree-rows');
-    entreeRows.innerHTML = '';
-    for (let i = 0; i < peEntreeSlots; i++) {
-      const label = peEntreeSlots === 1 ? 'Entree' : `Entree ${i + 1}`;
+    builder.hidden = false;
+
+    if (meal.type === 'meal') {
+      peEntreeSlots = meal.entreeSlots;
+      peSideMode = 'full';
+      document.getElementById('pe-btn-full').classList.add('active');
+      document.getElementById('pe-btn-half').classList.remove('active');
+      sideRow.hidden = false;
+      renderSideSelects();
+      entreeRows.innerHTML = '';
+      for (let i = 0; i < peEntreeSlots; i++) {
+        const label = peEntreeSlots === 1 ? 'Entree' : `Entree ${i + 1}`;
+        const div = document.createElement('div');
+        div.className = 'pe-row';
+        div.innerHTML =
+          `<span class="pe-label">${label}</span>` +
+          `<select id="pe-entree-${i}" class="pe-entree-col" onchange="updatePEPreview()">${entreeOptionsHTML()}</select>`;
+        entreeRows.appendChild(div);
+      }
+    } else {
+      sideRow.hidden = true;
+      entreeRows.innerHTML = '';
+      const optionsHTML = meal.type === 'alacarte' ? alcOptionsHTML() : appetizerOptionsHTML();
+      const label       = meal.type === 'alacarte' ? 'Item' : 'Item';
       const div = document.createElement('div');
       div.className = 'pe-row';
       div.innerHTML =
         `<span class="pe-label">${label}</span>` +
-        `<select id="pe-entree-${i}" class="pe-entree-col" onchange="updatePEPreview()">${entreeOptionsHTML()}</select>`;
+        `<select id="pe-single-item" class="pe-entree-col" onchange="updatePEPreview()">${optionsHTML}</select>`;
       entreeRows.appendChild(div);
     }
 
@@ -1141,39 +1186,62 @@
   }
 
   function getPESelection() {
-    let totalCal = 0, totalFat = 0, totalProtein = 0, totalCarbs = 0;
-    const labels = [];
+    if (!peCurrentMeal) return null;
 
-    if (peSideMode === 'full') {
-      const name = document.getElementById('pe-side-0')?.value;
-      if (!name) return null;
-      const n = getNutrition(name, pandaMenu.sides, 1);
-      if (!n) return null;
-      totalCal += n.cal; totalFat += n.fat; totalProtein += n.protein; totalCarbs += n.carbs;
-      labels.push(name);
+    if (peCurrentMeal.type === 'meal') {
+      let totalCal = 0, totalFat = 0, totalProtein = 0, totalCarbs = 0;
+      const labels = [];
+
+      if (peSideMode === 'full') {
+        const name = document.getElementById('pe-side-0')?.value;
+        if (!name) return null;
+        const n = getNutrition(name, pandaMenu.sides, 1);
+        if (!n) return null;
+        totalCal += n.cal; totalFat += n.fat; totalProtein += n.protein; totalCarbs += n.carbs;
+        labels.push(name);
+      } else {
+        const n0 = document.getElementById('pe-side-0')?.value;
+        const n1 = document.getElementById('pe-side-1')?.value;
+        if (!n0 || !n1) return null;
+        const a = getNutrition(n0, pandaMenu.sides, 0.5);
+        const b = getNutrition(n1, pandaMenu.sides, 0.5);
+        if (!a || !b) return null;
+        totalCal += a.cal + b.cal; totalFat += a.fat + b.fat;
+        totalProtein += a.protein + b.protein; totalCarbs += a.carbs + b.carbs;
+        labels.push('\xbd ' + n0, '\xbd ' + n1);
+      }
+
+      for (let i = 0; i < peEntreeSlots; i++) {
+        const name = document.getElementById(`pe-entree-${i}`)?.value;
+        if (!name) return null;
+        const n = getNutrition(name, pandaMenu.entrees, 1);
+        if (!n) return null;
+        totalCal += n.cal; totalFat += n.fat; totalProtein += n.protein; totalCarbs += n.carbs;
+        labels.push(name);
+      }
+
+      return { cal: totalCal, fat: totalFat, protein: totalProtein, carbs: totalCarbs,
+               label: labels.join(' + ') };
+    }
+
+    // A La Carte or Appetizers — single item
+    const sel = document.getElementById('pe-single-item');
+    if (!sel || !sel.value) return null;
+    const displayName = sel.options[sel.selectedIndex].text.split(' — ')[0];
+
+    let n;
+    if (peCurrentMeal.type === 'alacarte') {
+      const colonIdx = sel.value.indexOf(':');
+      const listType = sel.value.slice(0, colonIdx);
+      const itemName = sel.value.slice(colonIdx + 1);
+      const list = listType === 'entree' ? pandaMenu.entrees : pandaMenu.sides;
+      n = getNutrition(itemName, list, 1);
     } else {
-      const n0 = document.getElementById('pe-side-0')?.value;
-      const n1 = document.getElementById('pe-side-1')?.value;
-      if (!n0 || !n1) return null;
-      const a = getNutrition(n0, pandaMenu.sides, 0.5);
-      const b = getNutrition(n1, pandaMenu.sides, 0.5);
-      if (!a || !b) return null;
-      totalCal += a.cal + b.cal; totalFat += a.fat + b.fat;
-      totalProtein += a.protein + b.protein; totalCarbs += a.carbs + b.carbs;
-      labels.push('\xbd ' + n0, '\xbd ' + n1);
+      n = getNutrition(sel.value, pandaMenu.appetizers, 1);
     }
 
-    for (let i = 0; i < peEntreeSlots; i++) {
-      const name = document.getElementById(`pe-entree-${i}`)?.value;
-      if (!name) return null;
-      const n = getNutrition(name, pandaMenu.entrees, 1);
-      if (!n) return null;
-      totalCal += n.cal; totalFat += n.fat; totalProtein += n.protein; totalCarbs += n.carbs;
-      labels.push(name);
-    }
-
-    return { cal: totalCal, fat: totalFat, protein: totalProtein, carbs: totalCarbs,
-             label: labels.join(' + ') };
+    if (!n) return null;
+    return { ...n, label: displayName };
   }
 
   function updatePEPreview() {
@@ -1195,8 +1263,11 @@
     const sel = getPESelection();
     if (!sel) return;
     const mealName = document.getElementById('item-select').value;
+    const prefix = peCurrentMeal.type === 'meal'
+      ? `Panda Express ${mealName}: `
+      : `Panda Express: `;
     items.push({
-      name: `Panda Express ${mealName}: ${sel.label}`,
+      name: prefix + sel.label,
       cal: sel.cal, fat: sel.fat, protein: sel.protein, carbs: sel.carbs,
     });
     document.getElementById('pe-builder').hidden = true;
