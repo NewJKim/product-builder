@@ -584,6 +584,99 @@
     .row-macros { margin-top: -4px; }
     #custom-fat, #custom-protein, #custom-carbs { flex: 1; min-width: 70px; }
 
+    /* ── Panda Express Builder ────────────────────────────────── */
+    .pe-builder {
+      background: var(--bg-card);
+      border: 1px solid var(--border-item);
+      border-radius: 10px;
+      padding: 0.875rem 1rem;
+      margin-bottom: 10px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .pe-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .pe-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-sub);
+      min-width: 56px;
+      padding-top: 9px;
+      flex-shrink: 0;
+    }
+
+    .pe-side-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .pe-toggle {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      width: fit-content;
+      transition: border-color 0.2s;
+    }
+
+    .pe-toggle-btn {
+      border: none;
+      border-radius: 0;
+      height: 28px;
+      padding: 0 14px;
+      font-size: 12px;
+      font-weight: 500;
+      background: var(--bg-input);
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .pe-toggle-btn.active { background: var(--accent); color: #fff; }
+    .pe-toggle-btn:hover:not(.active) { background: var(--bg-btn-hover); color: var(--text); }
+
+    .pe-side-selects { display: flex; gap: 8px; }
+    .pe-side-selects select, .pe-entree-col { flex: 1; height: 36px; }
+
+    .pe-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-item);
+      transition: border-color 0.2s;
+    }
+
+    .pe-preview-text { font-size: 13px; color: var(--text-sub); }
+    .pe-preview-kcal { font-size: 15px; font-weight: 600; color: var(--text); }
+
+    .pe-add-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      height: 34px;
+      padding: 0 16px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.2s, opacity 0.2s;
+    }
+
+    .pe-add-btn:hover:not(:disabled) { background: #198f68; }
+    .pe-add-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
     /* ── Responsive ────────────────────────────────────────────── */
     @media (max-width: 540px) {
       .cards { grid-template-columns: 1fr 1fr; }
@@ -672,7 +765,25 @@
       <select id="item-select">
         <option value="">Select item</option>
       </select>
-      <button onclick="addItem()">Add</button>
+      <button id="add-item-btn" onclick="addItem()">Add</button>
+    </div>
+
+    <div id="pe-builder" class="pe-builder" hidden>
+      <div class="pe-row">
+        <span class="pe-label">Side</span>
+        <div class="pe-side-wrap">
+          <div class="pe-toggle">
+            <button class="pe-toggle-btn active" id="pe-btn-full" onclick="setSideMode('full')">Full</button>
+            <button class="pe-toggle-btn" id="pe-btn-half" onclick="setSideMode('half')">½ + ½</button>
+          </div>
+          <div id="pe-side-selects" class="pe-side-selects"></div>
+        </div>
+      </div>
+      <div id="pe-entree-rows"></div>
+      <div class="pe-footer">
+        <span class="pe-preview-text" id="pe-preview-text">Select all items to continue</span>
+        <button class="pe-add-btn" id="pe-add-btn" onclick="addBuilderItem()" disabled>Add meal</button>
+      </div>
     </div>
 
     <div class="row">
@@ -853,6 +964,32 @@
 <!-- ── Scripts ───────────────────────────────────────────────────── -->
 <script>
   // [name, kcal, fat_g, protein_g, carbs_g]
+  const pandaMenu = {
+    meals: [
+      { name: "Bowl",          entreeSlots: 1 },
+      { name: "Plate",         entreeSlots: 2 },
+      { name: "Bigger Plate",  entreeSlots: 3 },
+    ],
+    sides: [
+      ["Chow Mein",          510, 22, 14, 67],
+      ["Fried Rice",         520, 16, 11, 85],
+      ["White Steamed Rice", 380,  0,  7, 87],
+      ["Mixed Vegetables",    80,  3,  3, 13],
+    ],
+    entrees: [
+      ["Orange Chicken",           490, 23, 26, 51],
+      ["Beijing Beef",             470, 21, 14, 57],
+      ["Honey Walnut Shrimp",      360, 23, 13, 27],
+      ["Kung Pao Chicken",         290, 19, 16, 16],
+      ["Mushroom Chicken",         220, 13, 13, 15],
+      ["Broccoli Beef",            150,  7,  9, 13],
+      ["Mixed Vegetables",          80,  3,  3, 13],
+      ["String Bean Chicken",      190,  9, 14, 15],
+      ["Black Pepper Chicken",     280, 17, 16, 17],
+      ["Grilled Teriyaki Chicken", 300, 13, 36,  8],
+    ],
+  };
+
   const menu = {
     "McDonald's": [
       ["Big Mac",                     590, 34,  27, 45],
@@ -865,20 +1002,6 @@
       ["Medium French Fries",         320, 15,   4, 44],
       ["Apple Pie",                   240, 11,   2, 34],
       ["Large Coca-Cola",             290,  0,   0, 79]
-    ],
-    "Panda Express": [
-      ["Orange Chicken",          490, 23, 26, 51],
-      ["Beijing Beef",            470, 21, 14, 57],
-      ["Honey Walnut Shrimp",     360, 23, 13, 27],
-      ["Kung Pao Chicken",        290, 19, 16, 16],
-      ["Mushroom Chicken",        220, 13, 13, 15],
-      ["Broccoli Beef",           150,  7,  9, 13],
-      ["Mixed Vegetables",         80,  3,  3, 13],
-      ["Fried Rice",              520, 16, 11, 85],
-      ["Chow Mein",               510, 22, 14, 67],
-      ["White Steamed Rice",      380,  0,  7, 87],
-      ["Spring Roll (1)",         130,  6,  3, 15],
-      ["Cream Cheese Rangoon 3pc",190,  8,  5, 24]
     ],
     "Subway": [
       ["6\" Italian BMT",       410, 14, 22, 47],
@@ -943,17 +1066,181 @@
 
   // ── Menu ─────────────────────────────────────────────────────────
 
-  document.getElementById('brand-select').addEventListener('change', function () {
-    const sel = document.getElementById('item-select');
-    sel.innerHTML = '<option value="">Select item</option>';
-    if (menu[this.value]) {
-      menu[this.value].forEach(([name, cal, fat, protein, carbs], i) => {
-        const o = document.createElement('option');
-        o.value = JSON.stringify({ cal, fat, protein, carbs });
-        o.textContent = name + ' — ' + cal + ' kcal';
-        sel.appendChild(o);
-      });
+  // ── Panda Express Builder ─────────────────────────────────────
+
+  let peSideMode = 'full';
+  let peEntreeSlots = 0;
+
+  function sideOptionsHTML() {
+    return '<option value="">Select side</option>' +
+      pandaMenu.sides.map(([name, cal]) =>
+        `<option value="${name}">${name} — ${cal} kcal</option>`
+      ).join('');
+  }
+
+  function entreeOptionsHTML() {
+    return '<option value="">Select entree</option>' +
+      pandaMenu.entrees.map(([name, cal]) =>
+        `<option value="${name}">${name} — ${cal} kcal</option>`
+      ).join('');
+  }
+
+  function renderSideSelects() {
+    const wrap = document.getElementById('pe-side-selects');
+    if (peSideMode === 'full') {
+      wrap.innerHTML = `<select id="pe-side-0" onchange="updatePEPreview()">${sideOptionsHTML()}</select>`;
+    } else {
+      wrap.innerHTML =
+        `<select id="pe-side-0" onchange="updatePEPreview()">${sideOptionsHTML()}</select>` +
+        `<select id="pe-side-1" onchange="updatePEPreview()">${sideOptionsHTML()}</select>`;
     }
+  }
+
+  function renderPEBuilder(meal) {
+    peEntreeSlots = meal.entreeSlots;
+    peSideMode = 'full';
+    document.getElementById('pe-btn-full').classList.add('active');
+    document.getElementById('pe-btn-half').classList.remove('active');
+    document.getElementById('pe-builder').hidden = false;
+
+    renderSideSelects();
+
+    const entreeRows = document.getElementById('pe-entree-rows');
+    entreeRows.innerHTML = '';
+    for (let i = 0; i < peEntreeSlots; i++) {
+      const label = peEntreeSlots === 1 ? 'Entree' : `Entree ${i + 1}`;
+      const div = document.createElement('div');
+      div.className = 'pe-row';
+      div.innerHTML =
+        `<span class="pe-label">${label}</span>` +
+        `<select id="pe-entree-${i}" class="pe-entree-col" onchange="updatePEPreview()">${entreeOptionsHTML()}</select>`;
+      entreeRows.appendChild(div);
+    }
+
+    updatePEPreview();
+  }
+
+  function setSideMode(mode) {
+    peSideMode = mode;
+    document.getElementById('pe-btn-full').classList.toggle('active', mode === 'full');
+    document.getElementById('pe-btn-half').classList.toggle('active', mode === 'half');
+    renderSideSelects();
+    updatePEPreview();
+  }
+
+  function getNutrition(name, list, mult) {
+    const item = list.find(([n]) => n === name);
+    if (!item) return null;
+    const [, cal, fat, protein, carbs] = item;
+    return {
+      cal:     Math.round(cal     * mult),
+      fat:     Math.round(fat     * mult),
+      protein: Math.round(protein * mult),
+      carbs:   Math.round(carbs   * mult),
+    };
+  }
+
+  function getPESelection() {
+    let totalCal = 0, totalFat = 0, totalProtein = 0, totalCarbs = 0;
+    const labels = [];
+
+    if (peSideMode === 'full') {
+      const name = document.getElementById('pe-side-0')?.value;
+      if (!name) return null;
+      const n = getNutrition(name, pandaMenu.sides, 1);
+      if (!n) return null;
+      totalCal += n.cal; totalFat += n.fat; totalProtein += n.protein; totalCarbs += n.carbs;
+      labels.push(name);
+    } else {
+      const n0 = document.getElementById('pe-side-0')?.value;
+      const n1 = document.getElementById('pe-side-1')?.value;
+      if (!n0 || !n1) return null;
+      const a = getNutrition(n0, pandaMenu.sides, 0.5);
+      const b = getNutrition(n1, pandaMenu.sides, 0.5);
+      if (!a || !b) return null;
+      totalCal += a.cal + b.cal; totalFat += a.fat + b.fat;
+      totalProtein += a.protein + b.protein; totalCarbs += a.carbs + b.carbs;
+      labels.push('\xbd ' + n0, '\xbd ' + n1);
+    }
+
+    for (let i = 0; i < peEntreeSlots; i++) {
+      const name = document.getElementById(`pe-entree-${i}`)?.value;
+      if (!name) return null;
+      const n = getNutrition(name, pandaMenu.entrees, 1);
+      if (!n) return null;
+      totalCal += n.cal; totalFat += n.fat; totalProtein += n.protein; totalCarbs += n.carbs;
+      labels.push(name);
+    }
+
+    return { cal: totalCal, fat: totalFat, protein: totalProtein, carbs: totalCarbs,
+             label: labels.join(' + ') };
+  }
+
+  function updatePEPreview() {
+    const sel = getPESelection();
+    const previewEl = document.getElementById('pe-preview-text');
+    const addBtn = document.getElementById('pe-add-btn');
+    if (!sel) {
+      previewEl.innerHTML = 'Select all items to continue';
+      addBtn.disabled = true;
+    } else {
+      previewEl.innerHTML =
+        `<span class="pe-preview-kcal">${sel.cal.toLocaleString()} kcal</span>` +
+        ` &middot; F ${sel.fat}g &middot; P ${sel.protein}g &middot; C ${sel.carbs}g`;
+      addBtn.disabled = false;
+    }
+  }
+
+  function addBuilderItem() {
+    const sel = getPESelection();
+    if (!sel) return;
+    const mealName = document.getElementById('item-select').value;
+    items.push({
+      name: `Panda Express ${mealName}: ${sel.label}`,
+      cal: sel.cal, fat: sel.fat, protein: sel.protein, carbs: sel.carbs,
+    });
+    document.getElementById('pe-builder').hidden = true;
+    document.getElementById('brand-select').value = '';
+    document.getElementById('item-select').innerHTML = '<option value="">Select item</option>';
+    document.getElementById('add-item-btn').style.display = '';
+    render();
+  }
+
+  // ── Menu selects ──────────────────────────────────────────────────
+
+  document.getElementById('brand-select').addEventListener('change', function () {
+    const itemSel = document.getElementById('item-select');
+    const builder = document.getElementById('pe-builder');
+    const addBtn  = document.getElementById('add-item-btn');
+    builder.hidden = true;
+    itemSel.innerHTML = '<option value="">Select item</option>';
+
+    if (this.value === "Panda Express") {
+      addBtn.style.display = 'none';
+      pandaMenu.meals.forEach(meal => {
+        const o = document.createElement('option');
+        o.value = meal.name;
+        o.textContent = meal.name;
+        itemSel.appendChild(o);
+      });
+    } else {
+      addBtn.style.display = '';
+      if (menu[this.value]) {
+        menu[this.value].forEach(([name, cal, fat, protein, carbs]) => {
+          const o = document.createElement('option');
+          o.value = JSON.stringify({ cal, fat, protein, carbs });
+          o.textContent = name + ' — ' + cal + ' kcal';
+          itemSel.appendChild(o);
+        });
+      }
+    }
+  });
+
+  document.getElementById('item-select').addEventListener('change', function () {
+    if (document.getElementById('brand-select').value !== "Panda Express") return;
+    const meal = pandaMenu.meals.find(m => m.name === this.value);
+    if (!meal) { document.getElementById('pe-builder').hidden = true; return; }
+    renderPEBuilder(meal);
   });
 
   function addItem() {
