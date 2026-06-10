@@ -969,7 +969,7 @@
       { name: "Bowl",          type: "meal",    entreeSlots: 1 },
       { name: "Plate",         type: "meal",    entreeSlots: 2 },
       { name: "Bigger Plate",  type: "meal",    entreeSlots: 3 },
-      { name: "Cub Meal",      type: "single",  list: "cubMeals",   label: "Entree" },
+      { name: "Cub Meal",      type: "cubmeal" },
       { name: "A La Carte",    type: "alacarte" },
       { name: "Appetizers",    type: "single",  list: "appetizers", label: "Item" },
       { name: "Sauces",        type: "single",  list: "sauces",     label: "Sauce" },
@@ -999,10 +999,15 @@
       ["Vegetable Spring Roll (2 pc)", 240, 14,  4, 24],
       ["Apple Pie Roll (2 pc)",        300, 10,  3, 49],
     ],
-    cubMeals: [
-      ["Orange Chicken",           580, 17, 22, 84],
-      ["Grilled Teriyaki Chicken", 400, 16, 28, 36],
-      ["Broccoli Beef",            300,  7, 11, 49],
+    cubEntrees: [
+      ["Orange Chicken",           245, 12, 13, 26],
+      ["Grilled Teriyaki Chicken", 150,  7, 18,  4],
+      ["Broccoli Beef",             75,  4,  5,  7],
+    ],
+    cubSides: [
+      ["Chow Mein",          255, 11,  7, 34],
+      ["Fried Rice",         260,  8,  6, 43],
+      ["White Steamed Rice", 190,  0,  4, 44],
     ],
     sauces: [
       ["Sweet & Sour Sauce",   70,  0, 0, 21],
@@ -1162,6 +1167,30 @@
           `<select id="pe-entree-${i}" class="pe-entree-col" onchange="updatePEPreview()">${entreeOptionsHTML()}</select>`;
         entreeRows.appendChild(div);
       }
+    } else if (meal.type === 'cubmeal') {
+      sideRow.style.display = 'none';
+      entreeRows.innerHTML = '';
+
+      const sideDiv = document.createElement('div');
+      sideDiv.className = 'pe-row';
+      sideDiv.innerHTML = `<span class="pe-label">Side</span>` +
+        `<select id="pe-cub-side" class="pe-entree-col" onchange="updatePEPreview()">` +
+        `<option value="">Select side</option>` +
+        pandaMenu.cubSides.map(([name, cal]) =>
+          `<option value="${name}">${name} — ${cal} kcal</option>`
+        ).join('') + `</select>`;
+      entreeRows.appendChild(sideDiv);
+
+      const entreeDiv = document.createElement('div');
+      entreeDiv.className = 'pe-row';
+      entreeDiv.innerHTML = `<span class="pe-label">Entree</span>` +
+        `<select id="pe-cub-entree" class="pe-entree-col" onchange="updatePEPreview()">` +
+        `<option value="">Select entree</option>` +
+        pandaMenu.cubEntrees.map(([name, cal]) =>
+          `<option value="${name}">${name} — ${cal} kcal</option>`
+        ).join('') + `</select>`;
+      entreeRows.appendChild(entreeDiv);
+
     } else if (meal.type === 'alacarte') {
       sideRow.style.display = 'none';
       entreeRows.innerHTML = '';
@@ -1249,6 +1278,23 @@
                label: labels.join(' + ') };
     }
 
+    if (peCurrentMeal.type === 'cubmeal') {
+      const sideVal   = document.getElementById('pe-cub-side')?.value;
+      const entreeVal = document.getElementById('pe-cub-entree')?.value;
+      if (!sideVal || !entreeVal) return null;
+      const s = getNutrition(sideVal,   pandaMenu.cubSides,   1);
+      const e = getNutrition(entreeVal, pandaMenu.cubEntrees, 1);
+      if (!s || !e) return null;
+      const apple = { cal: 50, fat: 0, protein: 0, carbs: 13 };
+      return {
+        cal:     s.cal     + e.cal     + apple.cal,
+        fat:     s.fat     + e.fat     + apple.fat,
+        protein: s.protein + e.protein + apple.protein,
+        carbs:   s.carbs   + e.carbs   + apple.carbs,
+        label:   sideVal + ' + ' + entreeVal + ' + Apple Crisps',
+      };
+    }
+
     // A La Carte or Appetizers — single item
     const sel = document.getElementById('pe-single-item');
     if (!sel || !sel.value) return null;
@@ -1287,7 +1333,7 @@
     const sel = getPESelection();
     if (!sel) return;
     const mealName = document.getElementById('item-select').value;
-    const prefix = peCurrentMeal.type === 'meal'
+    const prefix = (peCurrentMeal.type === 'meal' || peCurrentMeal.type === 'cubmeal')
       ? `Panda Express ${mealName}: `
       : `Panda Express: `;
     items.push({
