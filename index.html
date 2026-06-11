@@ -677,6 +677,8 @@
     .pe-add-btn:hover:not(:disabled) { background: #198f68; }
     .pe-add-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
+    .pe-qty { width: 58px; flex-shrink: 0; text-align: center; }
+
     /* ── Responsive ────────────────────────────────────────────── */
     @media (max-width: 540px) {
       .cards { grid-template-columns: 1fr 1fr; }
@@ -973,7 +975,7 @@
       { name: "Cub Meal",      type: "cubmeal" },
       { name: "A La Carte",    type: "alacarte" },
       { name: "Appetizers",    type: "single",  list: "appetizers", label: "Item" },
-      { name: "Sauces",        type: "single",  list: "sauces",     label: "Sauce" },
+      { name: "Sauces",        type: "single",  list: "sauces",     label: "Sauce", hasQty: true },
     ],
     sides: [
       ["Chow Mein",          600, 23, 15,  94],
@@ -1246,7 +1248,10 @@
       div.className = 'pe-row';
       div.innerHTML =
         `<span class="pe-label">${meal.label}</span>` +
-        `<select id="pe-single-item" class="pe-entree-col" onchange="updatePEPreview()">${opts}</select>`;
+        `<select id="pe-single-item" class="pe-entree-col" onchange="updatePEPreview()">${opts}</select>` +
+        (meal.hasQty
+          ? `<input type="number" id="pe-qty" class="pe-qty" value="1" min="1" max="20" onchange="updatePEPreview()" oninput="updatePEPreview()">`
+          : '');
       entreeRows.appendChild(div);
     }
 
@@ -1362,7 +1367,12 @@
       n = getNutrition(sel.value.slice(colonIdx + 1), list, 1);
     } else {
       // 'single' type
-      n = getNutrition(sel.value, pandaMenu[peCurrentMeal.list], 1);
+      const qty = peCurrentMeal.hasQty
+        ? Math.max(1, parseInt(document.getElementById('pe-qty')?.value) || 1)
+        : 1;
+      n = getNutrition(sel.value, pandaMenu[peCurrentMeal.list], qty);
+      if (!n) return null;
+      return { ...n, label: qty > 1 ? `${displayName} x${qty}` : displayName };
     }
 
     if (!n) return null;
