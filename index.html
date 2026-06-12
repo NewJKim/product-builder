@@ -788,6 +788,26 @@
       </div>
     </div>
 
+    <div id="sw-builder" class="pe-builder" hidden>
+      <div class="pe-row">
+        <span class="pe-label">Size</span>
+        <div class="pe-toggle">
+          <button class="pe-toggle-btn active" id="sw-btn-6"  onclick="setSubwaySize('6inch')">6"</button>
+          <button class="pe-toggle-btn"        id="sw-btn-fl" onclick="setSubwaySize('footlong')">Footlong</button>
+        </div>
+      </div>
+      <div class="pe-row">
+        <span class="pe-label">Sandwich</span>
+        <select id="sw-sandwich" class="pe-entree-col" onchange="updateSWPreview()">
+          <option value="">Select sandwich</option>
+        </select>
+      </div>
+      <div class="pe-footer">
+        <span class="pe-preview-text" id="sw-preview-text">Select a sandwich</span>
+        <button class="pe-add-btn" id="sw-add-btn" onclick="addSubwayItem()" disabled>Add</button>
+      </div>
+    </div>
+
     <div class="row">
       <input type="text" id="custom-name" placeholder="Custom item name" />
       <input type="number" id="custom-cal" placeholder="kcal" min="0" />
@@ -966,6 +986,60 @@
 <!-- ── Scripts ───────────────────────────────────────────────────── -->
 <script>
   // [name, kcal, fat_g, protein_g, carbs_g]
+  // Source: Subway US Nutrition PDF (January 2026) — footlong = 2 × 6" values
+  // [name, cal_6in, fat_6in, protein_6in, carbs_6in]
+  const subwayMenu = {
+    groups: [
+      { name: "Cheesesteaks", items: [
+        ["Steak Philly",        510, 25, 28, 43],
+        ["Chipotle Philly",     490, 22, 30, 44],
+        ["Cheesy Garlic Steak", 510, 23, 26, 49],
+      ]},
+      { name: "Chicken", items: [
+        ["Grilled Chicken",              510, 24, 31, 43],
+        ["Chicken & Bacon Ranch",        580, 29, 35, 44],
+        ["Spicy Nacho Chicken",          440, 17, 24, 49],
+        ["Honey Mustard BBQ Chicken",    510, 20, 30, 53],
+        ["Sweet Onion Teriyaki Chicken", 430, 11, 29, 55],
+      ]},
+      { name: "Italians", items: [
+        ["B.M.T.",             610, 36, 27, 44],
+        ["Spicy Italian",      680, 44, 27, 44],
+        ["5 Meat Italian",     680, 37, 40, 46],
+        ["Meatball Marinara",  570, 28, 27, 53],
+        ["Meatball Pepperoni", 690, 38, 33, 56],
+      ]},
+      { name: "Deli Classics", items: [
+        ["Oven-Roasted Turkey", 480, 23, 26, 42],
+        ["Black Forest Ham",    490, 23, 25, 44],
+        ["Roast Beef",          500, 23, 31, 44],
+        ["Cold Cut Combo",      530, 29, 25, 43],
+        ["Tuna",                570, 33, 27, 42],
+        ["Veggie Delite",       320, 10, 17, 41],
+      ]},
+      { name: "Clubs", items: [
+        ["All American Club", 540, 28, 27, 45],
+        ["Subway Club",       500, 24, 31, 43],
+      ]},
+      { name: "Local Favorites", items: [
+        ["Big Hot Pastrami",          550, 30, 30, 44],
+        ["B.L.T.",                    480, 26, 18, 42],
+        ["Buffalo Chicken",           510, 19, 31, 55],
+        ["Oven-Roasted Turkey & Ham", 480, 23, 27, 41],
+        ["Pizza Sub",                 490, 25, 22, 45],
+        ["Veggie Patty",              470, 19, 19, 58],
+      ]},
+      { name: "Fresh Fit", items: [
+        ["Grilled Chicken & Smashed Avocado", 470, 19, 35, 44],
+        ["Grilled Chicken & Fresh Avocado",   450, 16, 35, 44],
+        ["Ham & Turkey Stacker",              290,  5, 20, 42],
+        ["Turkey & Ranch Delite",             380, 13, 26, 41],
+        ["Seasoned Steak & Smashed Avocado",  460, 16, 35, 45],
+        ["Seasoned Steak & Fresh Avocado",    430, 14, 35, 45],
+      ]},
+    ],
+  };
+
   // Source: pandaexpress.com/nutritioninformation
   const pandaMenu = {
     meals: [
@@ -1070,17 +1144,6 @@
       ["Medium French Fries",         320, 15,   4, 44],
       ["Apple Pie",                   240, 11,   2, 34],
       ["Large Coca-Cola",             290,  0,   0, 79]
-    ],
-    "Subway": [
-      ["6\" Italian BMT",       410, 14, 22, 47],
-      ["6\" Meatball Marinara", 480, 19, 23, 55],
-      ["6\" Tuna",              480, 25, 20, 44],
-      ["6\" Steak & Cheese",    380, 10, 26, 47],
-      ["6\" Chicken Teriyaki",  370,  5, 26, 54],
-      ["6\" BLT",               310, 10, 14, 39],
-      ["6\" Turkey Breast",     280,  3, 18, 45],
-      ["6\" Veggie Delite",     230,  3,  9, 43],
-      ["Chocolate Chip Cookie", 220, 10,  2, 30]
     ],
     "Chipotle": [
       ["Chicken Burrito",      705, 23, 51, 76],
@@ -1412,14 +1475,89 @@
     render();
   }
 
+  // ── Subway Builder ───────────────────────────────────────────────
+
+  let swSize = '6inch';
+
+  (function initSubwayDropdown() {
+    const sel = document.getElementById('sw-sandwich');
+    subwayMenu.groups.forEach(group => {
+      const og = document.createElement('optgroup');
+      og.label = group.name;
+      group.items.forEach(([name]) => {
+        const o = document.createElement('option');
+        o.value = name;
+        o.textContent = name;
+        og.appendChild(o);
+      });
+      sel.appendChild(og);
+    });
+  })();
+
+  function setSubwaySize(size) {
+    swSize = size;
+    document.getElementById('sw-btn-6').classList.toggle('active',  size === '6inch');
+    document.getElementById('sw-btn-fl').classList.toggle('active', size === 'footlong');
+    updateSWPreview();
+  }
+
+  function getSWNutrition(name) {
+    const mult = swSize === 'footlong' ? 2 : 1;
+    for (const group of subwayMenu.groups) {
+      const item = group.items.find(([n]) => n === name);
+      if (item) {
+        const [, cal, fat, protein, carbs] = item;
+        return { cal: cal * mult, fat: fat * mult, protein: protein * mult, carbs: carbs * mult };
+      }
+    }
+    return null;
+  }
+
+  function updateSWPreview() {
+    const val = document.getElementById('sw-sandwich').value;
+    const previewEl = document.getElementById('sw-preview-text');
+    const addBtn    = document.getElementById('sw-add-btn');
+    if (!val) {
+      previewEl.innerHTML = 'Select a sandwich';
+      addBtn.disabled = true;
+      return;
+    }
+    const n = getSWNutrition(val);
+    if (!n) { addBtn.disabled = true; return; }
+    previewEl.innerHTML =
+      `<span class="pe-preview-kcal">${n.cal.toLocaleString()} kcal</span>` +
+      ` &middot; F ${n.fat}g &middot; P ${n.protein}g &middot; C ${n.carbs}g`;
+    addBtn.disabled = false;
+  }
+
+  function addSubwayItem() {
+    const sel = document.getElementById('sw-sandwich');
+    if (!sel.value) return;
+    const n = getSWNutrition(sel.value);
+    if (!n) return;
+    const sizeLabel = swSize === 'footlong' ? 'Footlong' : '6"';
+    items.push({ name: `Subway ${sizeLabel}: ${sel.value}`, ...n });
+    sel.value = '';
+    document.getElementById('sw-builder').hidden = true;
+    document.getElementById('brand-select').value = '';
+    document.getElementById('item-select').style.display = '';
+    document.getElementById('add-item-btn').style.display = '';
+    render();
+  }
+
   // ── Menu selects ──────────────────────────────────────────────────
 
   document.getElementById('brand-select').addEventListener('change', function () {
-    const itemSel = document.getElementById('item-select');
-    const builder = document.getElementById('pe-builder');
-    const addBtn  = document.getElementById('add-item-btn');
-    builder.hidden = true;
+    const itemSel  = document.getElementById('item-select');
+    const peBuilder = document.getElementById('pe-builder');
+    const swBuilder = document.getElementById('sw-builder');
+    const addBtn   = document.getElementById('add-item-btn');
+
+    peBuilder.hidden = true;
+    swBuilder.hidden = true;
+    itemSel.style.display = '';
     itemSel.innerHTML = '<option value="">Select item</option>';
+    addBtn.style.display = '';
 
     if (this.value === "Panda Express") {
       addBtn.style.display = 'none';
@@ -1429,8 +1567,16 @@
         o.textContent = meal.name;
         itemSel.appendChild(o);
       });
+    } else if (this.value === "Subway") {
+      addBtn.style.display = 'none';
+      itemSel.style.display = 'none';
+      swSize = '6inch';
+      document.getElementById('sw-btn-6').classList.add('active');
+      document.getElementById('sw-btn-fl').classList.remove('active');
+      document.getElementById('sw-sandwich').value = '';
+      swBuilder.hidden = false;
+      updateSWPreview();
     } else {
-      addBtn.style.display = '';
       if (menu[this.value]) {
         menu[this.value].forEach(([name, cal, fat, protein, carbs]) => {
           const o = document.createElement('option');
