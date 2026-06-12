@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-adsense-account" content="ca-pub-1559308123366710">
-  <meta name="description" content="Free fast food calorie counter. Track calories from McDonald's, Panda Express, Subway, and Chipotle instantly. Set a personal daily goal and log every meal — no signup required." />
-  <meta property="og:title" content="Fast Food Calorie Counter — Free Daily Tracking Tool" />
-  <meta property="og:description" content="Track calories from popular fast food restaurants in real time. Set your daily goal and see your intake update with every item you add." />
+  <meta name="description" content="Nouri — Track calories and macros from McDonald's, Panda Express, Subway, and Chipotle instantly. Free fast food nutrition tracker, no sign-up required." />
+  <meta property="og:title" content="Nouri — Nourish smarter, wherever you are." />
+  <meta property="og:description" content="Free fast food calorie and macro tracker. Official nutrition data, meal builder, dark mode. No account needed." />
   <meta property="og:type" content="website" />
-  <title>Fast Food Calorie Counter — Free Daily Tracking Tool</title>
+  <title>Nouri — Nourish smarter, wherever you are.</title>
   <!-- Microsoft Clarity -->
   <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
@@ -29,31 +29,25 @@
   <style>
     /* ── Variables ─────────────────────────────────────────────── */
     :root {
-      --bg: #f5f5f3;
-      --bg-card: #ebebea;
-      --bg-input: #fff;
-      --bg-item: #fff;
-      --bg-progress: #ddddd9;
-      --bg-btn-hover: #f0f0ee;
-      --bg-feature: #fff;
-      --text: #1a1a1a;
-      --text-sub: #666;
-      --border: #ccc;
+      --bg:          #f5f5f3;
+      --bg-card:     #ebebea;
+      --bg-input:    #fff;
+      --bg-hero:     #edfcf5;
+      --text:        #1a1a1a;
+      --text-sub:    #666;
+      --border:      #ccc;
       --border-item: #ddd;
-      --accent: #1D9E75;
+      --accent:      #1D9E75;
     }
 
     [data-theme="dark"] {
-      --bg: #18181a;
-      --bg-card: #27272b;
-      --bg-input: #27272b;
-      --bg-item: #27272b;
-      --bg-progress: #38383d;
-      --bg-btn-hover: #32323a;
-      --bg-feature: #27272b;
-      --text: #e8e8e6;
-      --text-sub: #999;
-      --border: #44444a;
+      --bg:          #18181a;
+      --bg-card:     #27272b;
+      --bg-input:    #27272b;
+      --bg-hero:     #18181a;
+      --text:        #e8e8e6;
+      --text-sub:    #999;
+      --border:      #44444a;
       --border-item: #38383d;
     }
 
@@ -92,27 +86,17 @@
     }
 
     .site-logo {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-      white-space: nowrap;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -0.03em;
       flex-shrink: 0;
     }
 
-    .site-logo:hover { text-decoration: none; opacity: 0.8; }
+    .site-logo:hover { text-decoration: none; opacity: 0.85; }
 
-    .site-nav {
-      display: flex;
-      gap: 1.25rem;
-      flex: 1;
-    }
-
-    .site-nav a {
-      font-size: 13px;
-      color: var(--text-sub);
-      transition: color 0.15s;
-    }
-
+    .site-nav { display: flex; gap: 1.25rem; flex: 1; }
+    .site-nav a { font-size: 13px; color: var(--text-sub); transition: color 0.15s; }
     .site-nav a:hover { color: var(--text); text-decoration: none; }
 
     .theme-btn {
@@ -132,260 +116,228 @@
       flex-shrink: 0;
     }
 
-    .theme-btn:hover { background: var(--bg-btn-hover); }
-    .theme-btn:active { transform: scale(0.98); }
+    .theme-btn:hover { background: var(--bg-card); }
     .theme-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
 
-    @media (max-width: 540px) {
-      .site-nav { display: none; }
+    @media (max-width: 540px) { .site-nav { display: none; } }
+
+    /* ── Container ─────────────────────────────────────────────── */
+    .container { max-width: 720px; margin: 0 auto; padding: 0 1.25rem; }
+
+    /* ── Hero ──────────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(180deg, var(--bg-hero) 0%, var(--bg) 100%);
+      padding: 5rem 1.25rem 4rem;
+      text-align: center;
     }
 
-    /* ── Main layout ───────────────────────────────────────────── */
-    main { padding: 0 1rem 3rem; }
-
-    .container {
-      max-width: 680px;
-      margin: 0 auto;
-    }
-
-    /* ── Intro section ─────────────────────────────────────────── */
-    .intro-section {
-      padding: 2.5rem 0 2rem;
-    }
-
-    .intro-section h1 {
-      font-size: 26px;
-      font-weight: 700;
-      margin-bottom: 0.75rem;
-      line-height: 1.3;
-    }
-
-    .intro-section p {
-      font-size: 15px;
-      color: var(--text-sub);
-      margin-bottom: 0.6rem;
-      max-width: 600px;
-    }
-
-    /* ── Divider ───────────────────────────────────────────────── */
-    .divider {
-      border: none;
-      border-top: 1px solid var(--border-item);
-      margin: 2.5rem 0;
-      transition: border-color 0.2s;
-    }
-
-    /* ── Cards ─────────────────────────────────────────────────── */
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 1rem;
-    }
-
-    .card {
+    .hero-badge {
+      display: inline-block;
       background: var(--bg-card);
-      border-radius: 10px;
-      padding: 1rem;
-      transition: background 0.2s;
-    }
-
-    .card p:first-child {
+      border: 1px solid var(--border-item);
+      border-radius: 999px;
+      padding: 5px 16px;
       font-size: 12px;
+      font-weight: 600;
       color: var(--text-sub);
-      margin-bottom: 4px;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .card p:last-child { font-size: 26px; font-weight: 600; }
-
-    /* ── Progress bar ──────────────────────────────────────────── */
-    .progress-wrap {
-      background: var(--bg-progress);
-      border-radius: 8px;
-      height: 8px;
-      margin-bottom: 1.5rem;
-      overflow: hidden;
-      transition: background 0.2s;
-    }
-
-    #progress-bar {
-      height: 100%;
-      width: 0%;
-      background: var(--accent);
-      border-radius: 8px;
-      transition: width 0.3s, background 0.3s;
-    }
-
-    /* ── Form controls ─────────────────────────────────────────── */
-    .row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
-    }
-
-    select, input[type="text"], input[type="number"] {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 14px;
-      background: var(--bg-input);
-      color: var(--text);
-      outline: none;
-      height: 36px;
-      transition: background 0.2s, border-color 0.2s, color 0.2s;
-    }
-
-    select:focus, input:focus { border-color: #888; }
-
-    button {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0 14px;
-      font-size: 14px;
-      background: var(--bg-input);
-      color: var(--text);
-      cursor: pointer;
-      height: 36px;
-      white-space: nowrap;
-      transition: background 0.2s, border-color 0.2s, color 0.2s;
-    }
-
-    button:hover { background: var(--bg-btn-hover); }
-    button:active { transform: scale(0.98); }
-
-    #brand-select { flex: 1; min-width: 130px; }
-    #item-select  { flex: 2; min-width: 160px; }
-    #custom-name  { flex: 2; }
-    #custom-cal   { flex: 1; min-width: 80px; }
-
-    /* ── Item list ─────────────────────────────────────────────── */
-    .item-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--bg-item);
-      border: 0.5px solid var(--border-item);
-      border-radius: 8px;
-      padding: 10px 14px;
-      margin-bottom: 6px;
+      letter-spacing: 0.08em;
+      margin-bottom: 1.75rem;
       transition: background 0.2s, border-color 0.2s;
     }
 
-    .item-row .kcal { font-size: 14px; font-weight: 500; min-width: 70px; text-align: right; white-space: nowrap; }
-    .item-row .del {
-      border: none;
-      background: none;
-      color: var(--text-sub);
-      cursor: pointer;
-      font-size: 18px;
-      padding: 0 4px;
-      line-height: 1;
-      height: auto;
-    }
-    .item-row .del:hover { color: #e24b4a; background: none; }
-
-    /* ── Goal row ──────────────────────────────────────────────── */
-    .goal-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      margin-top: 1rem;
-    }
-
-    .goal-row label { font-size: 13px; color: var(--text-sub); white-space: nowrap; }
-    #goal-input { width: 90px; }
-    #clear-btn { margin-left: auto; }
-
-    /* ── Section headings ──────────────────────────────────────── */
-    .section-heading {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-
-    .section-desc {
-      font-size: 13px;
-      color: var(--text-sub);
+    .hero h1 {
+      font-size: clamp(32px, 6vw, 54px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
       margin-bottom: 1.25rem;
     }
 
-    /* ── About / Feature grid ──────────────────────────────────── */
-    .about-section { padding-bottom: 0.5rem; }
+    .hero h1 .accent { color: var(--accent); }
 
-    .about-section p {
-      font-size: 14px;
+    .hero-sub {
+      font-size: clamp(15px, 2.5vw, 18px);
       color: var(--text-sub);
-      margin-bottom: 1rem;
-      line-height: 1.7;
+      max-width: 520px;
+      margin: 0 auto 2.25rem;
+      line-height: 1.6;
     }
 
-    .about-section h3 {
+    .cta-btn {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 10px;
+      padding: 14px 32px;
       font-size: 16px;
       font-weight: 600;
-      margin: 1.5rem 0 0.5rem;
+      transition: background 0.2s, transform 0.1s;
     }
 
-    .steps-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 1.5rem;
-    }
+    .cta-btn:hover { background: #198f68; text-decoration: none; transform: translateY(-1px); }
+    .cta-btn:active { transform: translateY(0); }
 
-    .steps-list li {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
+    .cta-secondary {
+      display: inline-block;
+      margin-top: 1rem;
       font-size: 14px;
       color: var(--text-sub);
     }
+
+    /* ── Stats bar ─────────────────────────────────────────────── */
+    .stats-bar {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border-item);
+      border-bottom: 1px solid var(--border-item);
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .stats-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      text-align: center;
+      gap: 1rem;
+    }
+
+    .stat-num {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-sub);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Section common ────────────────────────────────────────── */
+    .section { padding: 4rem 1.25rem; }
+    .section-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+
+    .section h2 {
+      font-size: clamp(22px, 4vw, 32px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+
+    .section-sub {
+      font-size: 15px;
+      color: var(--text-sub);
+      max-width: 500px;
+      margin-bottom: 2.5rem;
+      line-height: 1.6;
+    }
+
+    /* ── Features grid ─────────────────────────────────────────── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .feat-card {
+      background: var(--bg-card);
+      border: 0.5px solid var(--border-item);
+      border-radius: 12px;
+      padding: 1.25rem;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .feat-icon {
+      font-size: 22px;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .feat-card h3 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .feat-card p {
+      font-size: 13px;
+      color: var(--text-sub);
+      line-height: 1.55;
+    }
+
+    /* ── Restaurants ───────────────────────────────────────────── */
+    .restaurants-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .rest-card {
+      background: var(--bg-card);
+      border: 0.5px solid var(--border-item);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .rest-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .rest-card p {
+      font-size: 13px;
+      color: var(--text-sub);
+      line-height: 1.55;
+    }
+
+    .rest-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 12%, transparent);
+      border-radius: 4px;
+      padding: 2px 7px;
+      margin-bottom: 8px;
+    }
+
+    /* ── Steps ─────────────────────────────────────────────────── */
+    .steps { display: flex; gap: 2rem; margin-bottom: 2.5rem; }
+
+    .step { flex: 1; }
 
     .step-num {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 22px;
-      height: 22px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       background: var(--accent);
       color: #fff;
-      font-size: 11px;
+      font-size: 14px;
       font-weight: 700;
-      flex-shrink: 0;
-      margin-top: 1px;
+      margin-bottom: 0.75rem;
     }
 
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 1.5rem;
-    }
-
-    .feature-card {
-      background: var(--bg-feature);
-      border: 0.5px solid var(--border-item);
-      border-radius: 10px;
-      padding: 1rem;
-      transition: background 0.2s, border-color 0.2s;
-    }
-
-    .feature-card .feature-title {
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .feature-card p {
-      font-size: 12px;
-      color: var(--text-sub);
-      margin: 0;
-      line-height: 1.5;
-    }
+    .step h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .step p { font-size: 13px; color: var(--text-sub); line-height: 1.6; }
 
     /* ── Reference table ───────────────────────────────────────── */
     .ref-table {
@@ -410,22 +362,11 @@
       color: var(--text-sub);
     }
 
-    .ref-table td:last-child {
-      font-weight: 500;
-      color: var(--text);
-      text-align: right;
-    }
-
+    .ref-table td:last-child { font-weight: 500; color: var(--text); text-align: right; }
     .ref-table tr:last-child td { border-bottom: none; }
 
     /* ── Partnership form ──────────────────────────────────────── */
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      margin-bottom: 10px;
-    }
-
+    .form-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
     .form-group label { font-size: 13px; color: var(--text-sub); }
 
     .form-group input,
@@ -446,11 +387,7 @@
     .form-group textarea { height: 96px; resize: vertical; line-height: 1.5; }
     .form-group input:focus, .form-group textarea:focus { border-color: #888; }
 
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
     .submit-btn {
       width: 100%;
@@ -467,8 +404,7 @@
     }
 
     .submit-btn:hover { background: #198f68; }
-    .submit-btn:active { transform: scale(0.98); }
-    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .form-notice {
       font-size: 13px;
@@ -485,219 +421,58 @@
     [data-theme="dark"] .form-notice.success { background: #0f3d2a; color: #4ade80; }
     [data-theme="dark"] .form-notice.error   { background: #3d0f0f; color: #f87171; }
 
-    /* ── Privacy Policy ────────────────────────────────────────── */
-    .policy-section h3 {
-      font-size: 14px;
-      font-weight: 600;
-      margin: 1.25rem 0 0.4rem;
-    }
+    .section-heading { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .section-desc { font-size: 13px; color: var(--text-sub); margin-bottom: 1.25rem; }
 
-    .policy-section p,
-    .policy-section ul {
-      font-size: 13px;
-      color: var(--text-sub);
-      line-height: 1.7;
-      margin-bottom: 0.75rem;
+    /* ── Divider ───────────────────────────────────────────────── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border-item);
+      max-width: 720px;
+      margin: 0 auto;
+      transition: border-color 0.2s;
     }
-
-    .policy-section ul {
-      padding-left: 1.25rem;
-    }
-
-    /* ── Disqus ────────────────────────────────────────────────── */
-    #disqus_thread { padding: 4px 0 2rem; }
 
     /* ── Footer ────────────────────────────────────────────────── */
     .site-footer {
       background: var(--bg-card);
       border-top: 1px solid var(--border-item);
-      padding: 1.5rem 1rem;
-      margin-top: 3rem;
+      padding: 1.5rem 1.25rem;
+      margin-top: 0;
       transition: background 0.2s, border-color 0.2s;
     }
 
-    .footer-inner {
-      max-width: 680px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .footer-nav {
-      display: flex;
-      gap: 1.25rem;
-      flex-wrap: wrap;
-    }
-
+    .footer-inner { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+    .footer-nav { display: flex; gap: 1.25rem; flex-wrap: wrap; }
     .footer-nav a { font-size: 13px; color: var(--text-sub); }
     .footer-nav a:hover { color: var(--text); text-decoration: none; }
-
     .footer-copy { font-size: 12px; color: var(--text-sub); }
-
-    .footer-disclaimer {
-      font-size: 11px;
-      color: var(--text-sub);
-      opacity: 0.7;
-      line-height: 1.5;
-    }
-
-    /* ── Macro summary cards ───────────────────────────────────── */
-    .macro-cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 1.5rem;
-    }
-
-    .macro-card {
-      background: var(--bg-card);
-      border-radius: 10px;
-      padding: 0.65rem 1rem;
-      transition: background 0.2s;
-    }
-
-    .macro-label {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 2px;
-    }
-
-    .macro-val { font-size: 20px; font-weight: 600; }
-
-    .lbl-fat     { color: #D97706; }
-    .lbl-protein { color: #2563EB; }
-    .lbl-carbs   { color: #7C3AED; }
-
-    [data-theme="dark"] .lbl-fat     { color: #FBBF24; }
-    [data-theme="dark"] .lbl-protein { color: #60A5FA; }
-    [data-theme="dark"] .lbl-carbs   { color: #A78BFA; }
-
-    /* ── Item row macros ───────────────────────────────────────── */
-    .item-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-    .item-name { font-size: 14px; }
-    .item-macros { font-size: 11px; color: var(--text-sub); }
-
-    /* ── Custom macro inputs ───────────────────────────────────── */
-    .row-macros { margin-top: -4px; }
-    #custom-fat, #custom-protein, #custom-carbs { flex: 1; min-width: 70px; }
-
-    /* ── Panda Express Builder ────────────────────────────────── */
-    .pe-builder {
-      background: var(--bg-card);
-      border: 1px solid var(--border-item);
-      border-radius: 10px;
-      padding: 0.875rem 1rem;
-      margin-bottom: 10px;
-      transition: background 0.2s, border-color 0.2s;
-    }
-
-    .pe-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-
-    .pe-label {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-sub);
-      min-width: 56px;
-      padding-top: 9px;
-      flex-shrink: 0;
-    }
-
-    .pe-side-wrap {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .pe-toggle {
-      display: flex;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      overflow: hidden;
-      width: fit-content;
-      transition: border-color 0.2s;
-    }
-
-    .pe-toggle-btn {
-      border: none;
-      border-radius: 0;
-      height: 28px;
-      padding: 0 14px;
-      font-size: 12px;
-      font-weight: 500;
-      background: var(--bg-input);
-      color: var(--text-sub);
-      cursor: pointer;
-      transition: background 0.2s, color 0.2s;
-    }
-
-    .pe-toggle-btn.active { background: var(--accent); color: #fff; }
-    .pe-toggle-btn:hover:not(.active) { background: var(--bg-btn-hover); color: var(--text); }
-
-    .pe-side-selects { display: flex; gap: 8px; }
-    .pe-side-selects select, .pe-entree-col { flex: 1; height: 36px; }
-
-    .pe-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid var(--border-item);
-      transition: border-color 0.2s;
-    }
-
-    .pe-preview-text { font-size: 13px; color: var(--text-sub); }
-    .pe-preview-kcal { font-size: 15px; font-weight: 600; color: var(--text); }
-
-    .pe-add-btn {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      height: 34px;
-      padding: 0 16px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: background 0.2s, opacity 0.2s;
-    }
-
-    .pe-add-btn:hover:not(:disabled) { background: #198f68; }
-    .pe-add-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    .pe-qty { width: 58px; flex-shrink: 0; text-align: center; }
+    .footer-disclaimer { font-size: 11px; color: var(--text-sub); opacity: 0.7; line-height: 1.5; }
 
     /* ── Responsive ────────────────────────────────────────────── */
-    @media (max-width: 540px) {
-      .cards { grid-template-columns: 1fr 1fr; }
-      .macro-cards { grid-template-columns: repeat(3, 1fr); }
-      .form-row { grid-template-columns: 1fr; }
-      .feature-grid { grid-template-columns: 1fr; }
+    @media (max-width: 600px) {
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .restaurants-grid { grid-template-columns: 1fr; }
+      .steps { flex-direction: column; gap: 1.5rem; }
+      .form-row-2 { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 400px) {
+      .features-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-<!-- ── Site Header ──────────────────────────────────────────────── -->
 <header class="site-header">
   <div class="site-header-inner">
-    <a href="#" class="site-logo">Fast Food Calorie Counter</a>
+    <a href="index.html" class="site-logo">Nouri</a>
     <nav class="site-nav">
-      <a href="#about">About</a>
+      <a href="tracker.html">Tracker</a>
+      <a href="#features">Features</a>
       <a href="#contact">Contact</a>
-      <a href="#privacy">Privacy</a>
+      <a href="privacy.html">Privacy</a>
     </nav>
     <button class="theme-btn" onclick="toggleTheme()" id="theme-btn" aria-label="Toggle theme">
       <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -709,979 +484,236 @@
 </header>
 
 <main>
-<div class="container">
 
-  <!-- ── Intro ──────────────────────────────────────────────────── -->
-  <section class="intro-section">
-    <h1>Fast Food Calorie Counter</h1>
-    <p>Keeping track of what you eat at fast food restaurants is one of the simplest ways to stay on top of your daily calorie intake. Meals from popular chains can range from under 300 calories to well over 1,500 — and it adds up fast.</p>
-    <p>This free tool lets you select items from McDonald's, Panda Express, Subway, and Chipotle — or enter any custom item — and instantly see your running daily total against a personal goal. No account, no app, no signup required.</p>
+  <!-- ── Hero ──────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-badge">Fast food nutrition tracker</div>
+    <h1>Nourish <span class="accent">smarter</span>,<br>wherever you are.</h1>
+    <p class="hero-sub">Track calories and macros from McDonald's, Panda Express, Subway, and Chipotle — instantly, with no sign-up required.</p>
+    <a href="tracker.html" class="cta-btn">Start tracking</a>
+    <br>
+    <a href="#features" class="cta-secondary">See how it works &darr;</a>
   </section>
 
-  <hr class="divider" style="margin-top:0;" />
+  <!-- ── Stats ─────────────────────────────────────────────────── -->
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div><span class="stat-num">4</span><span class="stat-label">Restaurants</span></div>
+      <div><span class="stat-num">100+</span><span class="stat-label">Menu items</span></div>
+      <div><span class="stat-num">4</span><span class="stat-label">Macros tracked</span></div>
+      <div><span class="stat-num">Free</span><span class="stat-label">No sign-up</span></div>
+    </div>
+  </div>
 
-  <!-- ── Calorie Counter Tool ────────────────────────────────────── -->
-  <section class="tool-section" aria-label="Calorie tracking tool">
-    <div class="cards">
-      <div class="card">
-        <p>Total calories</p>
-        <p id="total-cal">0</p>
-      </div>
-      <div class="card">
-        <p>Daily goal</p>
-        <p id="goal-display">2,000</p>
-      </div>
-      <div class="card">
-        <p>Remaining</p>
-        <p id="remaining">2,000</p>
+  <!-- ── Features ──────────────────────────────────────────────── -->
+  <section id="features" class="section">
+    <div class="container">
+      <p class="section-tag">Features</p>
+      <h2>Everything you need to eat smarter</h2>
+      <p class="section-sub">Nouri gives you real data, real macros, and a meal builder that matches how you actually order.</p>
+      <div class="features-grid">
+        <div class="feat-card">
+          <span class="feat-icon">📊</span>
+          <h3>Official nutrition data</h3>
+          <p>Every value sourced directly from restaurant-published nutrition guides. No estimates, no guesswork.</p>
+        </div>
+        <div class="feat-card">
+          <span class="feat-icon">⚡</span>
+          <h3>Full macro tracking</h3>
+          <p>Fat, protein, and carbs tracked alongside calories — all updating in real time as you log items.</p>
+        </div>
+        <div class="feat-card">
+          <span class="feat-icon">🍱</span>
+          <h3>Smart meal builder</h3>
+          <p>Build Panda Express bowls with Half &amp; Half sides, choose Subway 6" or Footlong — just like ordering.</p>
+        </div>
+        <div class="feat-card">
+          <span class="feat-icon">🎯</span>
+          <h3>Personal daily goal</h3>
+          <p>Set your own calorie target and see your remaining allowance update with every item you add.</p>
+        </div>
+        <div class="feat-card">
+          <span class="feat-icon">🌙</span>
+          <h3>Dark &amp; light mode</h3>
+          <p>Toggle between themes. Your preference is remembered across every visit.</p>
+        </div>
+        <div class="feat-card">
+          <span class="feat-icon">🔓</span>
+          <h3>No sign-up, ever</h3>
+          <p>No account, no app download, no email. Open your browser and start tracking immediately.</p>
+        </div>
       </div>
     </div>
+  </section>
 
-    <div class="progress-wrap">
-      <div id="progress-bar"></div>
-    </div>
+  <hr class="divider" />
 
-    <div class="macro-cards">
-      <div class="macro-card">
-        <p class="macro-label lbl-fat">Fat</p>
-        <p class="macro-val" id="total-fat">0<span style="font-size:13px;font-weight:400">g</span></p>
+  <!-- ── Restaurants ────────────────────────────────────────────── -->
+  <section class="section">
+    <div class="container">
+      <p class="section-tag">Supported restaurants</p>
+      <h2>Four chains, fully covered</h2>
+      <p class="section-sub">More restaurants are on the way. For now, we've gone deep on the ones you order from most.</p>
+      <div class="restaurants-grid">
+        <div class="rest-card">
+          <span class="rest-tag">10 items</span>
+          <h3>McDonald's</h3>
+          <p>Big Mac, Quarter Pounder, McNuggets, fries, and more — with full calorie and macro data.</p>
+        </div>
+        <div class="rest-card">
+          <span class="rest-tag">Meal builder</span>
+          <h3>Panda Express</h3>
+          <p>Bowl, Plate, Bigger Plate, Cub Meal — with Half &amp; Half sides, A La Carte, appetizers, and sauces.</p>
+        </div>
+        <div class="rest-card">
+          <span class="rest-tag">6" &amp; Footlong</span>
+          <h3>Subway</h3>
+          <p>38 sandwiches across 7 categories, with separate 6-inch and Footlong nutrition values.</p>
+        </div>
+        <div class="rest-card">
+          <span class="rest-tag">8 items</span>
+          <h3>Chipotle</h3>
+          <p>Burritos, bowls, tacos, salads, chips &amp; guacamole — built the way you actually order.</p>
+        </div>
       </div>
-      <div class="macro-card">
-        <p class="macro-label lbl-protein">Protein</p>
-        <p class="macro-val" id="total-protein">0<span style="font-size:13px;font-weight:400">g</span></p>
-      </div>
-      <div class="macro-card">
-        <p class="macro-label lbl-carbs">Carbs</p>
-        <p class="macro-val" id="total-carbs">0<span style="font-size:13px;font-weight:400">g</span></p>
-      </div>
     </div>
+  </section>
 
-    <div class="row">
-      <select id="brand-select">
-        <option value="">Restaurant</option>
-        <option>McDonald's</option>
-        <option>Panda Express</option>
-        <option>Subway</option>
-        <option>Chipotle</option>
-      </select>
-      <select id="item-select">
-        <option value="">Select item</option>
-      </select>
-      <button id="add-item-btn" onclick="addItem()">Add</button>
+  <hr class="divider" />
+
+  <!-- ── How it works ───────────────────────────────────────────── -->
+  <section class="section">
+    <div class="container">
+      <p class="section-tag">How it works</p>
+      <h2>Three steps, ten seconds</h2>
+      <p class="section-sub">No tutorial needed. Pick a restaurant, build your meal, see your totals.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3>Choose a restaurant</h3>
+          <p>Select from our supported chains. Panda Express and Subway open dedicated meal builders.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3>Log your items</h3>
+          <p>Pick menu items from the dropdowns, or add anything custom by name and calorie count.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3>Track your day</h3>
+          <p>Your calorie total and macros update instantly. Set a daily goal to see what's left.</p>
+        </div>
+      </div>
+      <a href="tracker.html" class="cta-btn">Open the tracker</a>
     </div>
+  </section>
 
-    <div id="pe-builder" class="pe-builder" hidden>
-      <div id="pe-side-row" class="pe-row">
-        <span class="pe-label">Side</span>
-        <div class="pe-side-wrap">
-          <div class="pe-toggle">
-            <button class="pe-toggle-btn active" id="pe-btn-full" onclick="setSideMode('full')">Full</button>
-            <button class="pe-toggle-btn" id="pe-btn-half" onclick="setSideMode('half')">Half & Half</button>
+  <hr class="divider" />
+
+  <!-- ── Quick reference ────────────────────────────────────────── -->
+  <section class="section">
+    <div class="container">
+      <p class="section-tag">Quick reference</p>
+      <h2>Know before you order</h2>
+      <p class="section-sub">A few eye-openers from our database.</p>
+      <table class="ref-table">
+        <thead>
+          <tr><th>Item</th><th>Restaurant</th><th>Calories</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Big Mac</td><td>McDonald's</td><td>590 kcal</td></tr>
+          <tr><td>Large French Fries</td><td>McDonald's</td><td>490 kcal</td></tr>
+          <tr><td>Orange Chicken</td><td>Panda Express</td><td>510 kcal</td></tr>
+          <tr><td>Chow Mein</td><td>Panda Express</td><td>600 kcal</td></tr>
+          <tr><td>B.M.T. (6")</td><td>Subway</td><td>610 kcal</td></tr>
+          <tr><td>B.M.T. (Footlong)</td><td>Subway</td><td>1,220 kcal</td></tr>
+          <tr><td>Chicken Burrito</td><td>Chipotle</td><td>705 kcal</td></tr>
+          <tr><td>Chips &amp; Guacamole</td><td>Chipotle</td><td>770 kcal</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12px;color:var(--text-sub);">Values are approximate. Always check the restaurant's official nutrition information.</p>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── Partnership ────────────────────────────────────────────── -->
+  <section id="contact" class="section">
+    <div class="container">
+      <h2 class="section-heading">Partnership Inquiry</h2>
+      <p class="section-desc">Interested in working together? Send us a message and we'll get back to you.</p>
+      <form id="contact-form" onsubmit="submitForm(event)">
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="f-name">Name</label>
+            <input type="text" id="f-name" name="name" placeholder="Jane Kim" required />
           </div>
-          <div id="pe-side-selects" class="pe-side-selects"></div>
-        </div>
-      </div>
-      <div id="pe-entree-rows"></div>
-      <div class="pe-footer">
-        <span class="pe-preview-text" id="pe-preview-text">Select all items to continue</span>
-        <button class="pe-add-btn" id="pe-add-btn" onclick="addBuilderItem()" disabled>Add meal</button>
-      </div>
-    </div>
-
-    <div id="sw-builder" class="pe-builder" hidden>
-      <div class="pe-row">
-        <span class="pe-label">Size</span>
-        <div class="pe-toggle">
-          <button class="pe-toggle-btn active" id="sw-btn-6"  onclick="setSubwaySize('6inch')">6"</button>
-          <button class="pe-toggle-btn"        id="sw-btn-fl" onclick="setSubwaySize('footlong')">Footlong</button>
-        </div>
-      </div>
-      <div class="pe-row">
-        <span class="pe-label">Sandwich</span>
-        <select id="sw-sandwich" class="pe-entree-col" onchange="updateSWPreview()">
-          <option value="">Select sandwich</option>
-        </select>
-      </div>
-      <div class="pe-footer">
-        <span class="pe-preview-text" id="sw-preview-text">Select a sandwich</span>
-        <button class="pe-add-btn" id="sw-add-btn" onclick="addSubwayItem()" disabled>Add</button>
-      </div>
-    </div>
-
-    <div class="row">
-      <input type="text" id="custom-name" placeholder="Custom item name" />
-      <input type="number" id="custom-cal" placeholder="kcal" min="0" />
-      <button onclick="addCustom()">Add</button>
-    </div>
-    <div class="row row-macros">
-      <input type="number" id="custom-fat" placeholder="Fat (g)" min="0" />
-      <input type="number" id="custom-protein" placeholder="Protein (g)" min="0" />
-      <input type="number" id="custom-carbs" placeholder="Carbs (g)" min="0" />
-    </div>
-
-    <div id="item-list"></div>
-
-    <div class="goal-row">
-      <label>Daily goal:</label>
-      <input type="number" id="goal-input" value="2000" min="500" max="9000" step="50" />
-      <button onclick="updateGoal()">Set</button>
-      <button id="clear-btn" onclick="clearAll()">Clear all</button>
-    </div>
-  </section>
-
-  <hr class="divider" />
-
-  <!-- ── About / How it works ───────────────────────────────────── -->
-  <section id="about" class="about-section">
-    <h2 class="section-heading">How to Use This Tool</h2>
-    <p class="section-desc">Three steps to track a meal — takes about ten seconds.</p>
-
-    <ol class="steps-list">
-      <li><span class="step-num">1</span><span>Choose a restaurant from the dropdown and select the menu item you ordered. It will be added to your daily log with its calorie count.</span></li>
-      <li><span class="step-num">2</span><span>Use the Custom Item row to log anything not in the menu list — just type the name and calorie count.</span></li>
-      <li><span class="step-num">3</span><span>Watch your total and remaining calories update in real time. Adjust the Daily Goal to match your personal target, then tap Clear All to reset at the end of the day.</span></li>
-    </ol>
-
-    <div class="feature-grid">
-      <div class="feature-card">
-        <p class="feature-title">Real menu data</p>
-        <p>Calories sourced from publicly available nutritional information for McDonald's, Panda Express, Subway, and Chipotle.</p>
-      </div>
-      <div class="feature-card">
-        <p class="feature-title">Custom entries</p>
-        <p>Not on the list? Add any item by name and calorie count. Great for home-cooked sides or lesser-known chains.</p>
-      </div>
-      <div class="feature-card">
-        <p class="feature-title">Dark mode</p>
-        <p>Toggle between light and dark themes. Your preference is saved so it persists across visits.</p>
-      </div>
-    </div>
-
-    <h3>Why Calorie Tracking Works</h3>
-    <p>Studies consistently show that simply being aware of calorie intake — without any strict diet — leads to better food choices over time. Fast food is easy to underestimate: a single combo meal can account for more than half a standard 2,000-calorie daily goal. By logging each item, including sides and drinks, you get an accurate picture of where you stand.</p>
-    <p>The daily recommended calorie intake varies by age, sex, and activity level. A common reference point is 2,000 calories per day for adults, but your personal goal may differ. Consult a registered dietitian or healthcare provider for personalized guidance.</p>
-
-    <h3>Quick Calorie Reference</h3>
-    <p>Common items and their approximate calorie counts:</p>
-
-    <table class="ref-table">
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Restaurant</th>
-          <th>Calories</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Big Mac</td><td>McDonald's</td><td>590 kcal</td></tr>
-        <tr><td>Large French Fries</td><td>McDonald's</td><td>490 kcal</td></tr>
-        <tr><td>Orange Chicken (serving)</td><td>Panda Express</td><td>510 kcal</td></tr>
-        <tr><td>Chow Mein</td><td>Panda Express</td><td>600 kcal</td></tr>
-        <tr><td>6" Italian BMT</td><td>Subway</td><td>410 kcal</td></tr>
-        <tr><td>6" Turkey Breast</td><td>Subway</td><td>280 kcal</td></tr>
-        <tr><td>Chicken Burrito</td><td>Chipotle</td><td>705 kcal</td></tr>
-        <tr><td>Chips &amp; Guacamole</td><td>Chipotle</td><td>770 kcal</td></tr>
-      </tbody>
-    </table>
-    <p>Actual values may vary by location, preparation method, and customization. Always check the restaurant's official nutrition information for the most accurate figures.</p>
-  </section>
-
-  <hr class="divider" />
-
-  <!-- ── Partnership form ────────────────────────────────────────── -->
-  <section id="contact">
-    <h2 class="section-heading">Partnership Inquiry</h2>
-    <p class="section-desc">Interested in working together? Send us a message and we'll get back to you.</p>
-
-    <form id="contact-form" onsubmit="submitForm(event)">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="f-name">Name</label>
-          <input type="text" id="f-name" name="name" placeholder="Jane Kim" required />
+          <div class="form-group">
+            <label for="f-email">Email</label>
+            <input type="email" id="f-email" name="email" placeholder="jane@company.com" required />
+          </div>
         </div>
         <div class="form-group">
-          <label for="f-email">Email</label>
-          <input type="email" id="f-email" name="email" placeholder="jane@company.com" required />
+          <label for="f-company">Company (optional)</label>
+          <input type="text" id="f-company" name="company" placeholder="Acme Corp" />
         </div>
-      </div>
-      <div class="form-group">
-        <label for="f-company">Company (optional)</label>
-        <input type="text" id="f-company" name="company" placeholder="Acme Corp" />
-      </div>
-      <div class="form-group">
-        <label for="f-message">Message</label>
-        <textarea id="f-message" name="message" placeholder="Tell us about your partnership idea..." required></textarea>
-      </div>
-      <button type="submit" class="submit-btn" id="submit-btn">Send message</button>
-      <p class="form-notice" id="form-notice"></p>
-    </form>
+        <div class="form-group">
+          <label for="f-message">Message</label>
+          <textarea id="f-message" name="message" placeholder="Tell us about your partnership idea..." required></textarea>
+        </div>
+        <button type="submit" class="submit-btn" id="submit-btn">Send message</button>
+        <p class="form-notice" id="form-notice"></p>
+      </form>
+    </div>
   </section>
 
-  <hr class="divider" />
-
-  <!-- ── Comments ───────────────────────────────────────────────── -->
-  <section id="comments">
-    <h2 class="section-heading">Comments</h2>
-    <div id="disqus_thread"></div>
-  </section>
-
-  <hr class="divider" />
-
-  <!-- ── Privacy Policy ─────────────────────────────────────────── -->
-  <section id="privacy" class="policy-section">
-    <h2 class="section-heading">Privacy Policy</h2>
-    <p>Last updated: June 2025</p>
-    <p>This Privacy Policy describes how Fast Food Calorie Counter ("we," "our," or "the site") handles information when you visit this website.</p>
-
-    <h3>Information We Collect</h3>
-    <p>This site does not require you to create an account or submit any personal information to use the calorie-tracking tool. All calorie logging happens locally in your browser and is not transmitted to or stored by us.</p>
-    <p>If you choose to submit a message through the Partnership Inquiry form, your name, email address, and message are processed by Formspree, Inc. for delivery to our inbox. We do not independently store this data.</p>
-
-    <h3>Cookies and Advertising</h3>
-    <p>This site uses Google AdSense to display advertisements. Google and its advertising partners use cookies to personalize ads based on your interests and browsing history. These cookies may track you across websites that use Google's advertising services.</p>
-    <p>You can opt out of personalized advertising at any time:</p>
-    <ul>
-      <li><a href="https://adssettings.google.com" target="_blank" rel="noopener">Google Ads Settings</a></li>
-      <li><a href="https://optout.aboutads.info" target="_blank" rel="noopener">Digital Advertising Alliance Opt-Out</a></li>
-    </ul>
-    <p>For more information on how Google uses data collected through its advertising products, visit <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">Google's partner site policy</a>.</p>
-
-    <h3>Third-Party Services</h3>
-    <p>This site integrates the following third-party services, each subject to their own privacy policies:</p>
-    <ul>
-      <li><strong>Google AdSense</strong> — advertising and cookie-based personalization</li>
-      <li><strong>Disqus</strong> — comment system; subject to the <a href="https://help.disqus.com/en/articles/1717103-disqus-privacy-policy" target="_blank" rel="noopener">Disqus Privacy Policy</a></li>
-      <li><strong>Formspree</strong> — contact form processing; subject to the <a href="https://formspree.io/legal/privacy-policy" target="_blank" rel="noopener">Formspree Privacy Policy</a></li>
-    </ul>
-
-    <h3>Data Retention</h3>
-    <p>We do not directly collect or store personal data. Any data processed by third-party services above is subject to their respective retention and deletion policies.</p>
-
-    <h3>Children's Privacy</h3>
-    <p>This site is not directed at children under the age of 13. We do not knowingly collect personal information from children.</p>
-
-    <h3>Changes to This Policy</h3>
-    <p>We may update this privacy policy from time to time. Continued use of this site after any changes constitutes acceptance of the revised policy. We encourage you to review this page periodically.</p>
-
-    <h3>Contact</h3>
-    <p>If you have questions about this privacy policy, you can reach us using the <a href="#contact">Partnership Inquiry form</a> above.</p>
-  </section>
-
-</div>
 </main>
 
 <!-- ── Footer ────────────────────────────────────────────────────── -->
 <footer class="site-footer">
   <div class="footer-inner">
     <nav class="footer-nav">
-      <a href="#about">About</a>
+      <a href="tracker.html">Tracker</a>
+      <a href="#features">Features</a>
       <a href="#contact">Contact</a>
-      <a href="#privacy">Privacy Policy</a>
+      <a href="privacy.html">Privacy Policy</a>
     </nav>
-    <p class="footer-copy">&copy; 2025 Fast Food Calorie Counter. All rights reserved.</p>
-    <p class="footer-disclaimer">Calorie information is approximate and based on publicly available nutritional data. Actual values may vary by location and preparation. This tool is for informational purposes only and does not constitute dietary or medical advice.</p>
+    <p class="footer-copy">&copy; 2025 Nouri. All rights reserved.</p>
+    <p class="footer-disclaimer">Calorie information is approximate and based on publicly available nutritional data. This tool is for informational purposes only and does not constitute dietary or medical advice.</p>
   </div>
 </footer>
 
-<!-- ── Scripts ───────────────────────────────────────────────────── -->
 <script>
-  // [name, kcal, fat_g, protein_g, carbs_g]
-  // Source: Subway US Nutrition PDF (January 2026) — footlong = 2 × 6" values
-  // [name, cal_6in, fat_6in, protein_6in, carbs_6in]
-  const subwayMenu = {
-    groups: [
-      { name: "Cheesesteaks", items: [
-        ["Steak Philly",        510, 25, 28, 43],
-        ["Chipotle Philly",     490, 22, 30, 44],
-        ["Cheesy Garlic Steak", 510, 23, 26, 49],
-      ]},
-      { name: "Chicken", items: [
-        ["Grilled Chicken",              510, 24, 31, 43],
-        ["Chicken & Bacon Ranch",        580, 29, 35, 44],
-        ["Spicy Nacho Chicken",          440, 17, 24, 49],
-        ["Honey Mustard BBQ Chicken",    510, 20, 30, 53],
-        ["Sweet Onion Teriyaki Chicken", 430, 11, 29, 55],
-      ]},
-      { name: "Italians", items: [
-        ["B.M.T.",             610, 36, 27, 44],
-        ["Spicy Italian",      680, 44, 27, 44],
-        ["5 Meat Italian",     680, 37, 40, 46],
-        ["Meatball Marinara",  570, 28, 27, 53],
-        ["Meatball Pepperoni", 690, 38, 33, 56],
-      ]},
-      { name: "Deli Classics", items: [
-        ["Oven-Roasted Turkey", 480, 23, 26, 42],
-        ["Black Forest Ham",    490, 23, 25, 44],
-        ["Roast Beef",          500, 23, 31, 44],
-        ["Cold Cut Combo",      530, 29, 25, 43],
-        ["Tuna",                570, 33, 27, 42],
-        ["Veggie Delite",       320, 10, 17, 41],
-      ]},
-      { name: "Clubs", items: [
-        ["All American Club", 540, 28, 27, 45],
-        ["Subway Club",       500, 24, 31, 43],
-      ]},
-      { name: "Local Favorites", items: [
-        ["Big Hot Pastrami",          550, 30, 30, 44],
-        ["B.L.T.",                    480, 26, 18, 42],
-        ["Buffalo Chicken",           510, 19, 31, 55],
-        ["Oven-Roasted Turkey & Ham", 480, 23, 27, 41],
-        ["Pizza Sub",                 490, 25, 22, 45],
-        ["Veggie Patty",              470, 19, 19, 58],
-      ]},
-      { name: "Fresh Fit", items: [
-        ["Grilled Chicken & Smashed Avocado", 470, 19, 35, 44],
-        ["Grilled Chicken & Fresh Avocado",   450, 16, 35, 44],
-        ["Ham & Turkey Stacker",              290,  5, 20, 42],
-        ["Turkey & Ranch Delite",             380, 13, 26, 41],
-        ["Seasoned Steak & Smashed Avocado",  460, 16, 35, 45],
-        ["Seasoned Steak & Fresh Avocado",    430, 14, 35, 45],
-      ]},
-    ],
-  };
-
-  // Source: pandaexpress.com/nutritioninformation
-  const pandaMenu = {
-    meals: [
-      { name: "Bowl",          type: "meal",    entreeSlots: 1 },
-      { name: "Plate",         type: "meal",    entreeSlots: 2 },
-      { name: "Bigger Plate",  type: "meal",    entreeSlots: 3 },
-      { name: "Cub Meal",      type: "cubmeal" },
-      { name: "A La Carte",    type: "alacarte" },
-      { name: "Appetizers",    type: "single",  list: "appetizers", label: "Item" },
-      { name: "Sauces",        type: "single",  list: "sauces",     label: "Sauce", hasQty: true },
-    ],
-    sides: [
-      ["Chow Mein",          600, 23, 15,  94],
-      ["Fried Rice",         620, 19, 13, 101],
-      ["Chow Fun",           410,  9,  9,  73],
-      ["Super Greens",       130,  4,  9,  14],
-      ["White Steamed Rice", 520,  0, 10, 118],
-    ],
-    entrees: [
-      // Chicken
-      ["Orange Chicken",               510, 24, 16, 53],
-      ["Hot Orange Chicken",           550, 27, 17, 59],
-      ["Black Pepper Chicken",         280, 19, 13, 15],
-      ["Kung Pao Chicken",             320, 21, 17, 15],
-      ["Mushroom Chicken",             220, 14, 13, 10],
-      ["Grilled Teriyaki Chicken",     275, 10, 33, 14],
-      ["Teriyaki Chicken",             340, 13, 41, 14],
-      ["Potato Chicken",               190, 10,  8, 18],
-      // Chicken Breast
-      ["Honey Sesame Chicken Breast",  340, 15, 16, 35],
-      ["String Bean Chicken Breast",   210, 12, 12, 13],
-      ["Sweet & Sour Chicken Breast",  300, 12, 10, 40],
-      ["Sweetfire Chicken Breast",     360, 15, 15, 40],
-      // Beef
-      ["Beijing Beef",                 470, 27, 14, 46],
-      ["Black Pepper Sirloin Steak",   180,  6, 19, 12],
-      ["Broccoli Beef",                150,  6, 15, 12],
-      // Seafood
-      ["Honey Walnut Shrimp",          430, 28, 13, 32],
-      ["Steamed Ginger Fish",          200, 12, 15,  8],
-      ["Wok-Fired Shrimp",             190,  5, 17, 19],
-      // Vegetables
-      ["Eggplant Tofu",                340, 24,  7, 23],
-      ["Super Greens",                  90,  3,  6, 10],
-    ],
-    appetizers: [
-      ["Chicken Egg Roll (1 pc)",      200, 10, 6, 20],
-      ["Chicken Potsticker (3 pc)",    160,  6, 6, 20],
-      ["Cream Cheese Rangoon (3 pc)",  190,  8, 5, 24],
-      ["Vegetable Spring Roll (2 pc)", 240, 14, 4, 24],
-      ["Apple Pie Roll",               150,  3, 2, 30],
-    ],
-    cubEntrees: [
-      ["Orange Chicken",               380, 18, 14, 39],
-      ["Hot Orange Chicken",           415, 20, 13, 44],
-      ["Black Pepper Chicken",         200, 14, 10, 11],
-      ["Kung Pao Chicken",             220, 15, 12, 11],
-      ["Mushroom Chicken",             170, 11, 10,  8],
-      ["Grilled Teriyaki Chicken",     210,  8, 25, 11],
-      ["Teriyaki Chicken",             250, 10, 31, 10],
-      ["Potato Chicken",               140,  8,  6, 15],
-      ["Honey Sesame Chicken Breast",  250, 11, 12, 26],
-      ["String Bean Chicken Breast",   160,  9,  9, 10],
-      ["Sweet & Sour Chicken Breast",  270, 10,  9, 35],
-      ["Sweetfire Chicken Breast",     270, 11, 11, 30],
-      ["Beijing Beef",                 360, 20, 11, 35],
-      ["Black Pepper Sirloin Steak",   130,  5, 14,  9],
-      ["Broccoli Beef",                110,  5, 11,  9],
-      ["Honey Walnut Shrimp",          240, 15,  7, 17],
-      ["Steamed Ginger Fish",           70,  4,  5,  3],
-      ["Wok-Fired Shrimp",             140,  4, 13, 15],
-      ["Eggplant Tofu",                250, 18,  5, 17],
-      ["Super Greens",                  60,  2,  4,  7],
-    ],
-    cubSides: [
-      ["Chow Mein",          440, 19, 11, 57],
-      ["Fried Rice",         466, 13,  9, 76],
-      ["Chow Fun",           300,  6,  6, 53],
-      ["Super Greens",        90,  3,  6, 10],
-      ["White Steamed Rice", 390,  0,  8, 87],
-    ],
-    sauces: [
-      ["Sweet & Sour Sauce", 70, 0, 0, 21],
-      ["Teriyaki Sauce",     70, 0, 0, 16],
-      ["Chili Sauce",        10, 0, 0,  2],
-      ["Hot Mustard",        10, 1, 0,  0],
-      ["Potsticker Sauce",   10, 0, 0,  3],
-      ["Soy Sauce",           5, 0, 0,  0],
-      ["Fortune Cookie",     20, 0, 0,  5],
-    ],
-  };
-
-  const menu = {
-    "McDonald's": [
-      ["Big Mac",                     590, 34,  27, 45],
-      ["Quarter Pounder with Cheese", 530, 27,  31, 42],
-      ["McDouble",                    400, 20,  22, 33],
-      ["Filet-O-Fish",                390, 19,  16, 38],
-      ["Egg McMuffin",                310, 13,  17, 30],
-      ["Chicken McNuggets 10 pc",     420, 25,  22, 27],
-      ["Large French Fries",          490, 23,   7, 64],
-      ["Medium French Fries",         320, 15,   4, 44],
-      ["Apple Pie",                   240, 11,   2, 34],
-      ["Large Coca-Cola",             290,  0,   0, 79]
-    ],
-    "Chipotle": [
-      ["Chicken Burrito",      705, 23, 51, 76],
-      ["Steak Burrito",        745, 24, 47, 76],
-      ["Sofritas Burrito",     680, 23, 30, 84],
-      ["Chicken Burrito Bowl", 665, 23, 51, 51],
-      ["Chicken Tacos (3)",    525, 22, 37, 47],
-      ["Chicken Salad",        520, 24, 46, 30],
-      ["Chips & Guacamole",    770, 46,  8, 84],
-      ["Queso Blanco (side)",  120,  8,  4,  8]
-    ]
-  };
-
-  let goal = 2000;
-  let items = [];
-
-  // ── Theme ────────────────────────────────────────────────────────
-
-  const SUN_ICON = `<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>`;
+  const SUN_ICON  = `<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>`;
   const MOON_ICON = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
 
   function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
-    const icon = document.getElementById('theme-icon');
-    const label = document.getElementById('theme-label');
-    if (theme === 'dark') {
-      icon.innerHTML = SUN_ICON;
-      label.textContent = 'Light';
-    } else {
-      icon.innerHTML = MOON_ICON;
-      label.textContent = 'Dark';
-    }
-    const remEl = document.getElementById('remaining');
-    remEl.style.color = remEl.textContent.startsWith('-') ? '#e24b4a' : 'var(--text)';
+    document.getElementById('theme-icon').innerHTML = theme === 'dark' ? SUN_ICON : MOON_ICON;
+    document.getElementById('theme-label').textContent = theme === 'dark' ? 'Light' : 'Dark';
   }
 
   function toggleTheme() {
     const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     localStorage.setItem('theme', next);
     applyTheme(next);
-    if (typeof DISQUS !== 'undefined') {
-      DISQUS.reset({ reload: true, config: disqus_config });
-    }
   }
 
-  (function initTheme() {
+  (function() {
     const saved = localStorage.getItem('theme');
     const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     applyTheme(saved || preferred);
   })();
 
-  // ── Menu ─────────────────────────────────────────────────────────
-
-  // ── Panda Express Builder ─────────────────────────────────────
-
-  let peSideMode = 'full';
-  let peEntreeSlots = 0;
-  let peCurrentMeal = null;
-  let peCurrentSideList = 'sides';
-
-  function sideOptionsHTML(list, isHalf = false) {
-    return '<option value="">Select side</option>' +
-      list.map(([name, cal]) => {
-        const displayCal = isHalf ? Math.round(cal / 2) : cal;
-        return `<option value="${name}">${name} — ${displayCal} kcal</option>`;
-      }).join('');
-  }
-
-  function entreeOptionsHTML() {
-    return '<option value="">Select entree</option>' +
-      pandaMenu.entrees.map(([name, cal]) =>
-        `<option value="${name}">${name} — ${cal} kcal</option>`
-      ).join('');
-  }
-
-  function alcOptionsHTML() {
-    return '<option value="">Select item</option>' +
-      '<optgroup label="Entrees">' +
-      pandaMenu.entrees.map(([name, cal]) =>
-        `<option value="entree:${name}">${name} — ${cal} kcal</option>`
-      ).join('') +
-      '</optgroup>' +
-      '<optgroup label="Sides">' +
-      pandaMenu.sides.map(([name, cal]) =>
-        `<option value="side:${name}">${name} — ${cal} kcal</option>`
-      ).join('') +
-      '</optgroup>';
-  }
-
-
-  function renderSideSelects() {
-    const list = pandaMenu[peCurrentSideList];
-    const wrap = document.getElementById('pe-side-selects');
-    if (peSideMode === 'full') {
-      wrap.innerHTML = `<select id="pe-side-0" onchange="updatePEPreview()">${sideOptionsHTML(list, false)}</select>`;
-    } else {
-      wrap.innerHTML =
-        `<select id="pe-side-0" onchange="updatePEPreview()">${sideOptionsHTML(list, true)}</select>` +
-        `<select id="pe-side-1" onchange="updatePEPreview()">${sideOptionsHTML(list, true)}</select>`;
-    }
-  }
-
-  function renderPEBuilder(meal) {
-    peCurrentMeal = meal;
-    const builder    = document.getElementById('pe-builder');
-    const sideRow    = document.getElementById('pe-side-row');
-    const entreeRows = document.getElementById('pe-entree-rows');
-    builder.hidden = false;
-
-    if (meal.type === 'meal') {
-      peCurrentSideList = 'sides';
-      peEntreeSlots = meal.entreeSlots;
-      peSideMode = 'full';
-      document.getElementById('pe-btn-full').classList.add('active');
-      document.getElementById('pe-btn-half').classList.remove('active');
-      sideRow.style.display = '';
-      renderSideSelects();
-      entreeRows.innerHTML = '';
-      for (let i = 0; i < peEntreeSlots; i++) {
-        const label = peEntreeSlots === 1 ? 'Entree' : `Entree ${i + 1}`;
-        const div = document.createElement('div');
-        div.className = 'pe-row';
-        div.innerHTML =
-          `<span class="pe-label">${label}</span>` +
-          `<select id="pe-entree-${i}" class="pe-entree-col" onchange="updatePEPreview()">${entreeOptionsHTML()}</select>`;
-        entreeRows.appendChild(div);
-      }
-    } else if (meal.type === 'cubmeal') {
-      peCurrentSideList = 'cubSides';
-      peSideMode = 'full';
-      document.getElementById('pe-btn-full').classList.add('active');
-      document.getElementById('pe-btn-half').classList.remove('active');
-      sideRow.style.display = '';
-      renderSideSelects();
-
-      entreeRows.innerHTML = '';
-      const entreeDiv = document.createElement('div');
-      entreeDiv.className = 'pe-row';
-      entreeDiv.innerHTML = `<span class="pe-label">Entree</span>` +
-        `<select id="pe-entree-0" class="pe-entree-col" onchange="updatePEPreview()">` +
-        `<option value="">Select entree</option>` +
-        pandaMenu.cubEntrees.map(([name, cal]) =>
-          `<option value="${name}">${name} — ${cal} kcal</option>`
-        ).join('') + `</select>`;
-      entreeRows.appendChild(entreeDiv);
-
-    } else if (meal.type === 'alacarte') {
-      sideRow.style.display = 'none';
-      entreeRows.innerHTML = '';
-      const div = document.createElement('div');
-      div.className = 'pe-row';
-      div.innerHTML =
-        `<span class="pe-label">Item</span>` +
-        `<select id="pe-single-item" class="pe-entree-col" onchange="updatePEPreview()">${alcOptionsHTML()}</select>`;
-      entreeRows.appendChild(div);
-    } else {
-      // 'single' type: Cub Meal, Appetizers, Sauces
-      sideRow.style.display = 'none';
-      entreeRows.innerHTML = '';
-      const opts = `<option value="">Select ${meal.label.toLowerCase()}</option>` +
-        pandaMenu[meal.list].map(([name, cal]) =>
-          `<option value="${name}">${name} — ${cal} kcal</option>`
-        ).join('');
-      const div = document.createElement('div');
-      div.className = 'pe-row';
-      div.innerHTML =
-        `<span class="pe-label">${meal.label}</span>` +
-        `<select id="pe-single-item" class="pe-entree-col" onchange="updatePEPreview()">${opts}</select>` +
-        (meal.hasQty
-          ? `<input type="number" id="pe-qty" class="pe-qty" value="1" min="1" max="20" onchange="updatePEPreview()" oninput="updatePEPreview()">`
-          : '');
-      entreeRows.appendChild(div);
-    }
-
-    updatePEPreview();
-  }
-
-  function setSideMode(mode) {
-    peSideMode = mode;
-    document.getElementById('pe-btn-full').classList.toggle('active', mode === 'full');
-    document.getElementById('pe-btn-half').classList.toggle('active', mode === 'half');
-    renderSideSelects();
-    updatePEPreview();
-  }
-
-  function getNutrition(name, list, mult) {
-    const item = list.find(([n]) => n === name);
-    if (!item) return null;
-    const [, cal, fat, protein, carbs] = item;
-    return {
-      cal:     Math.round(cal     * mult),
-      fat:     Math.round(fat     * mult),
-      protein: Math.round(protein * mult),
-      carbs:   Math.round(carbs   * mult),
-    };
-  }
-
-  function getPESelection() {
-    if (!peCurrentMeal) return null;
-
-    if (peCurrentMeal.type === 'meal') {
-      let totalCal = 0, totalFat = 0, totalProtein = 0, totalCarbs = 0;
-      const labels = [];
-
-      if (peSideMode === 'full') {
-        const name = document.getElementById('pe-side-0')?.value;
-        if (!name) return null;
-        const n = getNutrition(name, pandaMenu.sides, 1);
-        if (!n) return null;
-        totalCal += n.cal; totalFat += n.fat; totalProtein += n.protein; totalCarbs += n.carbs;
-        labels.push(name);
-      } else {
-        const n0 = document.getElementById('pe-side-0')?.value;
-        const n1 = document.getElementById('pe-side-1')?.value;
-        if (!n0 || !n1) return null;
-        const a = getNutrition(n0, pandaMenu.sides, 0.5);
-        const b = getNutrition(n1, pandaMenu.sides, 0.5);
-        if (!a || !b) return null;
-        totalCal += a.cal + b.cal; totalFat += a.fat + b.fat;
-        totalProtein += a.protein + b.protein; totalCarbs += a.carbs + b.carbs;
-        labels.push('\xbd ' + n0, '\xbd ' + n1);
-      }
-
-      for (let i = 0; i < peEntreeSlots; i++) {
-        const name = document.getElementById(`pe-entree-${i}`)?.value;
-        if (!name) return null;
-        const n = getNutrition(name, pandaMenu.entrees, 1);
-        if (!n) return null;
-        totalCal += n.cal; totalFat += n.fat; totalProtein += n.protein; totalCarbs += n.carbs;
-        labels.push(name);
-      }
-
-      return { cal: totalCal, fat: totalFat, protein: totalProtein, carbs: totalCarbs,
-               label: labels.join(' + ') };
-    }
-
-    if (peCurrentMeal.type === 'cubmeal') {
-      const entreeVal = document.getElementById('pe-entree-0')?.value;
-      if (!entreeVal) return null;
-      const e = getNutrition(entreeVal, pandaMenu.cubEntrees, 1);
-      if (!e) return null;
-
-      let sideCal = 0, sideFat = 0, sideProt = 0, sideCarb = 0;
-      const sideLabels = [];
-
-      if (peSideMode === 'full') {
-        const name = document.getElementById('pe-side-0')?.value;
-        if (!name) return null;
-        const n = getNutrition(name, pandaMenu.cubSides, 1);
-        if (!n) return null;
-        sideCal = n.cal; sideFat = n.fat; sideProt = n.protein; sideCarb = n.carbs;
-        sideLabels.push(name);
-      } else {
-        const n0 = document.getElementById('pe-side-0')?.value;
-        const n1 = document.getElementById('pe-side-1')?.value;
-        if (!n0 || !n1) return null;
-        const a = getNutrition(n0, pandaMenu.cubSides, 0.5);
-        const b = getNutrition(n1, pandaMenu.cubSides, 0.5);
-        if (!a || !b) return null;
-        sideCal = a.cal + b.cal; sideFat = a.fat + b.fat;
-        sideProt = a.protein + b.protein; sideCarb = a.carbs + b.carbs;
-        sideLabels.push('\xbd ' + n0, '\xbd ' + n1);
-      }
-
-      const apple = { cal: 40, fat: 0, protein: 0, carbs: 10 };
-      return {
-        cal:     sideCal  + e.cal     + apple.cal,
-        fat:     sideFat  + e.fat     + apple.fat,
-        protein: sideProt + e.protein + apple.protein,
-        carbs:   sideCarb + e.carbs   + apple.carbs,
-        label:   [...sideLabels, entreeVal, 'Apple Crisps'].join(' + '),
-      };
-    }
-
-    // A La Carte or Appetizers — single item
-    const sel = document.getElementById('pe-single-item');
-    if (!sel || !sel.value) return null;
-    const displayName = sel.options[sel.selectedIndex].text.split(' — ')[0];
-
-    let n;
-    if (peCurrentMeal.type === 'alacarte') {
-      const colonIdx = sel.value.indexOf(':');
-      const list = sel.value.slice(0, colonIdx) === 'entree' ? pandaMenu.entrees : pandaMenu.sides;
-      n = getNutrition(sel.value.slice(colonIdx + 1), list, 1);
-    } else {
-      // 'single' type
-      const qty = peCurrentMeal.hasQty
-        ? Math.max(1, parseInt(document.getElementById('pe-qty')?.value) || 1)
-        : 1;
-      n = getNutrition(sel.value, pandaMenu[peCurrentMeal.list], qty);
-      if (!n) return null;
-      return { ...n, label: qty > 1 ? `${displayName} x${qty}` : displayName };
-    }
-
-    if (!n) return null;
-    return { ...n, label: displayName };
-  }
-
-  function updatePEPreview() {
-    const sel = getPESelection();
-    const previewEl = document.getElementById('pe-preview-text');
-    const addBtn = document.getElementById('pe-add-btn');
-    if (!sel) {
-      previewEl.innerHTML = 'Select all items to continue';
-      addBtn.disabled = true;
-    } else {
-      previewEl.innerHTML =
-        `<span class="pe-preview-kcal">${sel.cal.toLocaleString()} kcal</span>` +
-        ` &middot; F ${sel.fat}g &middot; P ${sel.protein}g &middot; C ${sel.carbs}g`;
-      addBtn.disabled = false;
-    }
-  }
-
-  function addBuilderItem() {
-    const sel = getPESelection();
-    if (!sel) return;
-    const mealName = document.getElementById('item-select').value;
-    const prefix = (peCurrentMeal.type === 'meal' || peCurrentMeal.type === 'cubmeal')
-      ? `Panda Express ${mealName}: `
-      : `Panda Express: `;
-    items.push({
-      name: prefix + sel.label,
-      cal: sel.cal, fat: sel.fat, protein: sel.protein, carbs: sel.carbs,
-    });
-    document.getElementById('pe-builder').hidden = true;
-    document.getElementById('brand-select').value = '';
-    document.getElementById('item-select').innerHTML = '<option value="">Select item</option>';
-    document.getElementById('add-item-btn').style.display = '';
-    render();
-  }
-
-  // ── Subway Builder ───────────────────────────────────────────────
-
-  let swSize = '6inch';
-
-  (function initSubwayDropdown() {
-    const sel = document.getElementById('sw-sandwich');
-    subwayMenu.groups.forEach(group => {
-      const og = document.createElement('optgroup');
-      og.label = group.name;
-      group.items.forEach(([name]) => {
-        const o = document.createElement('option');
-        o.value = name;
-        o.textContent = name;
-        og.appendChild(o);
-      });
-      sel.appendChild(og);
-    });
-  })();
-
-  function setSubwaySize(size) {
-    swSize = size;
-    document.getElementById('sw-btn-6').classList.toggle('active',  size === '6inch');
-    document.getElementById('sw-btn-fl').classList.toggle('active', size === 'footlong');
-    updateSWPreview();
-  }
-
-  function getSWNutrition(name) {
-    const mult = swSize === 'footlong' ? 2 : 1;
-    for (const group of subwayMenu.groups) {
-      const item = group.items.find(([n]) => n === name);
-      if (item) {
-        const [, cal, fat, protein, carbs] = item;
-        return { cal: cal * mult, fat: fat * mult, protein: protein * mult, carbs: carbs * mult };
-      }
-    }
-    return null;
-  }
-
-  function updateSWPreview() {
-    const val = document.getElementById('sw-sandwich').value;
-    const previewEl = document.getElementById('sw-preview-text');
-    const addBtn    = document.getElementById('sw-add-btn');
-    if (!val) {
-      previewEl.innerHTML = 'Select a sandwich';
-      addBtn.disabled = true;
-      return;
-    }
-    const n = getSWNutrition(val);
-    if (!n) { addBtn.disabled = true; return; }
-    previewEl.innerHTML =
-      `<span class="pe-preview-kcal">${n.cal.toLocaleString()} kcal</span>` +
-      ` &middot; F ${n.fat}g &middot; P ${n.protein}g &middot; C ${n.carbs}g`;
-    addBtn.disabled = false;
-  }
-
-  function addSubwayItem() {
-    const sel = document.getElementById('sw-sandwich');
-    if (!sel.value) return;
-    const n = getSWNutrition(sel.value);
-    if (!n) return;
-    const sizeLabel = swSize === 'footlong' ? 'Footlong' : '6"';
-    items.push({ name: `Subway ${sizeLabel}: ${sel.value}`, ...n });
-    sel.value = '';
-    document.getElementById('sw-builder').hidden = true;
-    document.getElementById('brand-select').value = '';
-    document.getElementById('item-select').style.display = '';
-    document.getElementById('add-item-btn').style.display = '';
-    render();
-  }
-
-  // ── Menu selects ──────────────────────────────────────────────────
-
-  document.getElementById('brand-select').addEventListener('change', function () {
-    const itemSel  = document.getElementById('item-select');
-    const peBuilder = document.getElementById('pe-builder');
-    const swBuilder = document.getElementById('sw-builder');
-    const addBtn   = document.getElementById('add-item-btn');
-
-    peBuilder.hidden = true;
-    swBuilder.hidden = true;
-    itemSel.style.display = '';
-    itemSel.innerHTML = '<option value="">Select item</option>';
-    addBtn.style.display = '';
-
-    if (this.value === "Panda Express") {
-      addBtn.style.display = 'none';
-      pandaMenu.meals.forEach(meal => {
-        const o = document.createElement('option');
-        o.value = meal.name;
-        o.textContent = meal.name;
-        itemSel.appendChild(o);
-      });
-    } else if (this.value === "Subway") {
-      addBtn.style.display = 'none';
-      itemSel.style.display = 'none';
-      swSize = '6inch';
-      document.getElementById('sw-btn-6').classList.add('active');
-      document.getElementById('sw-btn-fl').classList.remove('active');
-      document.getElementById('sw-sandwich').value = '';
-      swBuilder.hidden = false;
-      updateSWPreview();
-    } else {
-      if (menu[this.value]) {
-        menu[this.value].forEach(([name, cal, fat, protein, carbs]) => {
-          const o = document.createElement('option');
-          o.value = JSON.stringify({ cal, fat, protein, carbs });
-          o.textContent = name + ' — ' + cal + ' kcal';
-          itemSel.appendChild(o);
-        });
-      }
-    }
-  });
-
-  document.getElementById('item-select').addEventListener('change', function () {
-    if (document.getElementById('brand-select').value !== "Panda Express") return;
-    const meal = pandaMenu.meals.find(m => m.name === this.value);
-    if (!meal) { document.getElementById('pe-builder').hidden = true; return; }
-    renderPEBuilder(meal);
-  });
-
-  function addItem() {
-    const brand = document.getElementById('brand-select').value;
-    const sel = document.getElementById('item-select');
-    if (!brand || !sel.value) return;
-    const { cal, fat, protein, carbs } = JSON.parse(sel.value);
-    const name = sel.options[sel.selectedIndex].text.split(' — ')[0];
-    items.push({ name: brand + ': ' + name, cal, fat, protein, carbs });
-    render();
-  }
-
-  function addCustom() {
-    const name = document.getElementById('custom-name').value.trim();
-    const cal  = parseInt(document.getElementById('custom-cal').value) || 0;
-    if (!name || cal <= 0) return;
-    const fat     = parseInt(document.getElementById('custom-fat').value)     || 0;
-    const protein = parseInt(document.getElementById('custom-protein').value) || 0;
-    const carbs   = parseInt(document.getElementById('custom-carbs').value)   || 0;
-    items.push({ name, cal, fat, protein, carbs });
-    ['custom-name','custom-cal','custom-fat','custom-protein','custom-carbs']
-      .forEach(id => document.getElementById(id).value = '');
-    render();
-  }
-
-  function removeItem(i) { items.splice(i, 1); render(); }
-
-  function updateGoal() {
-    const v = parseInt(document.getElementById('goal-input').value);
-    if (v >= 500) { goal = v; render(); }
-  }
-
-  function clearAll() { items = []; render(); }
-
-  function render() {
-    const total   = items.reduce((s, x) => s + x.cal,     0);
-    const totFat  = items.reduce((s, x) => s + x.fat,     0);
-    const totProt = items.reduce((s, x) => s + x.protein, 0);
-    const totCarb = items.reduce((s, x) => s + x.carbs,   0);
-    const remaining = goal - total;
-    const pct = Math.min(100, Math.round(total / goal * 100));
-
-    document.getElementById('total-cal').textContent     = total.toLocaleString();
-    document.getElementById('goal-display').textContent  = goal.toLocaleString();
-    document.getElementById('total-fat').innerHTML       = totFat  + '<span style="font-size:13px;font-weight:400">g</span>';
-    document.getElementById('total-protein').innerHTML   = totProt + '<span style="font-size:13px;font-weight:400">g</span>';
-    document.getElementById('total-carbs').innerHTML     = totCarb + '<span style="font-size:13px;font-weight:400">g</span>';
-
-    const remEl = document.getElementById('remaining');
-    remEl.textContent = remaining.toLocaleString();
-    remEl.style.color = remaining < 0 ? '#e24b4a' : 'var(--text)';
-
-    const bar = document.getElementById('progress-bar');
-    bar.style.width = pct + '%';
-    bar.style.background = pct >= 100 ? '#E24B4A' : pct >= 80 ? '#BA7517' : '#1D9E75';
-
-    const list = document.getElementById('item-list');
-    list.innerHTML = '';
-    items.forEach((item, i) => {
-      const hasMacros = item.fat || item.protein || item.carbs;
-      const macroStr = hasMacros
-        ? 'F ' + item.fat + 'g &middot; P ' + item.protein + 'g &middot; C ' + item.carbs + 'g'
-        : '';
-      const row = document.createElement('div');
-      row.className = 'item-row';
-      row.innerHTML =
-        '<div class="item-info">' +
-          '<span class="item-name">' + item.name + '</span>' +
-          (macroStr ? '<span class="item-macros">' + macroStr + '</span>' : '') +
-        '</div>' +
-        '<span class="kcal">' + item.cal.toLocaleString() + ' kcal</span>' +
-        '<button class="del" onclick="removeItem(' + i + ')">&#215;</button>';
-      list.appendChild(row);
-    });
-  }
-
-  // ── Partnership form ─────────────────────────────────────────────
-
   async function submitForm(e) {
     e.preventDefault();
     const btn = document.getElementById('submit-btn');
     const notice = document.getElementById('form-notice');
-    btn.disabled = true;
-    btn.textContent = 'Sending…';
+    btn.disabled = true; btn.textContent = 'Sending…';
     notice.className = 'form-notice';
     try {
       const res = await fetch('https://formspree.io/f/xbdejopp', {
-        method: 'POST',
-        headers: { 'Accept': 'application/json' },
+        method: 'POST', headers: { 'Accept': 'application/json' },
         body: new FormData(e.target)
       });
       if (res.ok) {
@@ -1693,26 +725,9 @@
       notice.className = 'form-notice error';
       notice.textContent = 'Something went wrong. Please try again.';
     } finally {
-      btn.disabled = false;
-      btn.textContent = 'Send message';
+      btn.disabled = false; btn.textContent = 'Send message';
     }
   }
 </script>
-
-<!-- ── Disqus ─────────────────────────────────────────────────────── -->
-<script>
-  var disqus_config = function () {
-    this.page.url = window.location.href;
-    this.page.identifier = 'fast-food-calorie-counter-v1';
-    this.page.color_scheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-  };
-  (function () {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://productbuilder-oz1dbbgxft.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </body>
 </html>
