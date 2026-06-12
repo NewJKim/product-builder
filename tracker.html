@@ -584,6 +584,158 @@
     .row-macros { margin-top: -4px; }
     #custom-fat, #custom-protein, #custom-carbs { flex: 1; min-width: 70px; }
 
+    /* ── Goal Calculator ───────────────────────────────────────── */
+    .calc-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-item);
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .calc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.875rem 1rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .calc-header-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .calc-header-title .calc-icon { font-size: 16px; }
+    .calc-chevron {
+      font-size: 12px;
+      color: var(--text-sub);
+      transition: transform 0.2s;
+    }
+    .calc-panel.open .calc-chevron { transform: rotate(180deg); }
+
+    .calc-body {
+      padding: 0 1rem 1rem;
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .calc-panel.open .calc-body { display: flex; }
+
+    .calc-field { display: flex; flex-direction: column; gap: 5px; }
+    .calc-field > label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-sub);
+    }
+
+    /* segmented toggle (reuse pe-toggle look) */
+    .calc-seg {
+      display: inline-flex;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      overflow: hidden;
+      width: fit-content;
+      transition: border-color 0.2s;
+    }
+    .calc-seg button {
+      border: none;
+      border-radius: 0;
+      height: 32px;
+      padding: 0 16px;
+      font-size: 13px;
+      font-weight: 500;
+      background: var(--bg-input);
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .calc-seg button.active { background: var(--accent); color: #fff; }
+    .calc-seg button:hover:not(.active) { background: var(--bg-btn-hover); color: var(--text); }
+
+    .calc-inputs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .calc-inputs .calc-field label { font-size: 11px; }
+    .calc-inputs input, .calc-body select {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 14px;
+      background: var(--bg-input);
+      color: var(--text);
+      outline: none;
+      height: 38px;
+      width: 100%;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .calc-inputs input:focus, .calc-body select:focus { border-color: #888; }
+
+    .calc-height-imperial { display: flex; gap: 6px; }
+    .calc-height-imperial input { min-width: 0; }
+
+    .calc-goals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .calc-goal-btn {
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 10px 8px;
+      background: var(--bg-input);
+      color: var(--text);
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.2s, border-color 0.2s;
+      height: auto;
+    }
+    .calc-goal-btn.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+    .calc-goal-btn:hover:not(.active) { background: var(--bg-btn-hover); }
+    .calc-goal-title { font-size: 13px; font-weight: 600; display: block; }
+    .calc-goal-desc { font-size: 10.5px; color: var(--text-sub); display: block; margin-top: 2px; }
+
+    .calc-result {
+      background: var(--bg-input);
+      border: 1px solid var(--border-item);
+      border-radius: 9px;
+      padding: 0.875rem 1rem;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .calc-result-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text-sub);
+      margin-bottom: 4px;
+    }
+    .calc-result-row.primary { margin-bottom: 0; padding-top: 8px; border-top: 1px solid var(--border-item); margin-top: 8px; }
+    .calc-result-row.primary .calc-result-label { color: var(--text); font-weight: 600; font-size: 14px; }
+    .calc-result-val { font-weight: 600; color: var(--text); }
+    .calc-result-row.primary .calc-result-val { font-size: 22px; color: var(--accent); }
+
+    .calc-apply-btn {
+      width: 100%;
+      height: 40px;
+      margin-top: 10px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .calc-apply-btn:hover { background: #198f68; }
+    .calc-hint { font-size: 11px; color: var(--text-sub); margin-top: 8px; line-height: 1.5; }
+
+    @media (max-width: 480px) {
+      .calc-goals { grid-template-columns: 1fr; }
+    }
+
     /* ── Panda Express Builder ────────────────────────────────── */
     .pe-builder {
       background: var(--bg-card);
@@ -720,6 +872,98 @@
 
   <!-- ── Calorie Counter Tool ────────────────────────────────────── -->
   <section class="tool-section" aria-label="Calorie tracking tool">
+
+    <!-- ── Goal Calculator ──────────────────────────────────────── -->
+    <div class="calc-panel" id="calc-panel">
+      <div class="calc-header" onclick="toggleCalc()">
+        <span class="calc-header-title"><span class="calc-icon">🎯</span> Calculate my calorie goal</span>
+        <span class="calc-chevron">▼</span>
+      </div>
+      <div class="calc-body">
+
+        <div style="display:flex; gap:1.5rem; flex-wrap:wrap;">
+          <div class="calc-field">
+            <label>Units</label>
+            <div class="calc-seg" id="calc-units">
+              <button class="active" data-units="imperial" onclick="setUnits('imperial')">Imperial</button>
+              <button data-units="metric" onclick="setUnits('metric')">Metric</button>
+            </div>
+          </div>
+          <div class="calc-field">
+            <label>Sex</label>
+            <div class="calc-seg" id="calc-sex">
+              <button class="active" data-sex="male" onclick="setSex('male')">Male</button>
+              <button data-sex="female" onclick="setSex('female')">Female</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="calc-inputs">
+          <div class="calc-field">
+            <label>Age</label>
+            <input type="number" id="calc-age" min="13" max="100" placeholder="30" oninput="updateCalc()" />
+          </div>
+          <div class="calc-field">
+            <label id="calc-height-label">Height (ft / in)</label>
+            <div id="calc-height-wrap"></div>
+          </div>
+          <div class="calc-field">
+            <label id="calc-weight-label">Weight (lbs)</label>
+            <input type="number" id="calc-weight" min="1" placeholder="160" oninput="updateCalc()" />
+          </div>
+        </div>
+
+        <div class="calc-field">
+          <label>Activity level</label>
+          <select id="calc-activity" onchange="updateCalc()">
+            <option value="1.2">Sedentary — little or no exercise</option>
+            <option value="1.375">Light — exercise 1–3 days/week</option>
+            <option value="1.55" selected>Moderate — exercise 3–5 days/week</option>
+            <option value="1.725">Active — exercise 6–7 days/week</option>
+            <option value="1.9">Very active — hard daily exercise or physical job</option>
+          </select>
+        </div>
+
+        <div class="calc-field">
+          <label>Goal</label>
+          <div class="calc-goals" id="calc-goals">
+            <button class="calc-goal-btn" data-goal="cut" onclick="setGoalType('cut')">
+              <span class="calc-goal-title">Cutting</span>
+              <span class="calc-goal-desc">Lose fat · −500 kcal</span>
+            </button>
+            <button class="calc-goal-btn active" data-goal="recomp" onclick="setGoalType('recomp')">
+              <span class="calc-goal-title">Recomp</span>
+              <span class="calc-goal-desc">Maintain · TDEE</span>
+            </button>
+            <button class="calc-goal-btn" data-goal="bulk" onclick="setGoalType('bulk')">
+              <span class="calc-goal-title">Lean Bulk</span>
+              <span class="calc-goal-desc">Build muscle · +300 kcal</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="calc-result" id="calc-result" hidden>
+          <div class="calc-result-row">
+            <span class="calc-result-label">BMR (at rest)</span>
+            <span class="calc-result-val" id="calc-bmr">—</span>
+          </div>
+          <div class="calc-result-row">
+            <span class="calc-result-label">Maintenance (TDEE)</span>
+            <span class="calc-result-val" id="calc-tdee">—</span>
+          </div>
+          <div class="calc-result-row primary">
+            <span class="calc-result-label" id="calc-target-label">Your daily target</span>
+            <span class="calc-result-val" id="calc-target">—</span>
+          </div>
+        </div>
+
+        <button class="calc-apply-btn" id="calc-apply" onclick="applyCalcGoal()" hidden>Set as my daily goal</button>
+        <p class="calc-result" id="calc-empty" style="border:none;background:none;padding:0;font-size:12px;color:var(--text-sub);">Fill in age, height, and weight to see your numbers.</p>
+
+        <p class="calc-hint">Estimates use the Mifflin-St Jeor equation. Actual needs vary — adjust based on real-world results over 2–3 weeks. Not medical advice.</p>
+      </div>
+    </div>
+
     <div class="cards">
       <div class="card">
         <p>Total calories</p>
@@ -1059,6 +1303,175 @@
     const saved = localStorage.getItem('theme');
     const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     applyTheme(saved || preferred);
+  })();
+
+  // ── Goal Calculator (TDEE) ────────────────────────────────────────
+
+  const CALC_KEY = 'nouri_calc';
+  const GOAL_KEY = 'nouri_goal';
+  const GOAL_ADJUST = { cut: -500, recomp: 0, bulk: 300 };
+  const GOAL_LABEL  = { cut: 'Cutting target', recomp: 'Recomp target', bulk: 'Lean bulk target' };
+
+  let calcState = { units: 'imperial', sex: 'male', goalType: 'recomp' };
+  let calcTarget = null;
+
+  function toggleCalc() {
+    document.getElementById('calc-panel').classList.toggle('open');
+  }
+
+  function renderHeightInputs() {
+    const wrap = document.getElementById('calc-height-wrap');
+    const hLabel = document.getElementById('calc-height-label');
+    const wLabel = document.getElementById('calc-weight-label');
+    if (calcState.units === 'imperial') {
+      hLabel.textContent = 'Height (ft / in)';
+      wLabel.textContent = 'Weight (lbs)';
+      wrap.innerHTML =
+        '<div class="calc-height-imperial">' +
+          '<input type="number" id="calc-ft" min="3" max="8"  placeholder="5"  oninput="updateCalc()">' +
+          '<input type="number" id="calc-in" min="0" max="11" placeholder="10" oninput="updateCalc()">' +
+        '</div>';
+    } else {
+      hLabel.textContent = 'Height (cm)';
+      wLabel.textContent = 'Weight (kg)';
+      wrap.innerHTML =
+        '<input type="number" id="calc-cm" min="100" max="250" placeholder="178" oninput="updateCalc()">';
+    }
+  }
+
+  function setUnits(u) {
+    if (calcState.units === u) return;
+    calcState.units = u;
+    document.querySelectorAll('#calc-units button').forEach(b =>
+      b.classList.toggle('active', b.dataset.units === u));
+    renderHeightInputs();
+    updateCalc();
+  }
+
+  function setSex(s) {
+    calcState.sex = s;
+    document.querySelectorAll('#calc-sex button').forEach(b =>
+      b.classList.toggle('active', b.dataset.sex === s));
+    updateCalc();
+  }
+
+  function setGoalType(g) {
+    calcState.goalType = g;
+    document.querySelectorAll('#calc-goals button').forEach(b =>
+      b.classList.toggle('active', b.dataset.goal === g));
+    updateCalc();
+  }
+
+  function getCalcMetrics() {
+    const age = parseFloat(document.getElementById('calc-age').value);
+    let heightCm, weightKg;
+    if (calcState.units === 'imperial') {
+      const ft   = parseFloat(document.getElementById('calc-ft')?.value) || 0;
+      const inch = parseFloat(document.getElementById('calc-in')?.value) || 0;
+      const lbs  = parseFloat(document.getElementById('calc-weight').value);
+      if ((!ft && !inch) || !lbs) return null;
+      heightCm = (ft * 12 + inch) * 2.54;
+      weightKg = lbs * 0.453592;
+    } else {
+      heightCm = parseFloat(document.getElementById('calc-cm')?.value);
+      weightKg = parseFloat(document.getElementById('calc-weight').value);
+      if (!heightCm || !weightKg) return null;
+    }
+    if (!age || age < 13 || !heightCm || !weightKg) return null;
+    return { age, heightCm, weightKg };
+  }
+
+  function updateCalc() {
+    saveCalcState();
+    const m = getCalcMetrics();
+    const resultEl = document.getElementById('calc-result');
+    const applyEl  = document.getElementById('calc-apply');
+    const emptyEl  = document.getElementById('calc-empty');
+
+    if (!m) {
+      resultEl.hidden = true;
+      applyEl.hidden = true;
+      emptyEl.hidden = false;
+      calcTarget = null;
+      return;
+    }
+
+    // Mifflin-St Jeor
+    let bmr = 10 * m.weightKg + 6.25 * m.heightCm - 5 * m.age;
+    bmr += calcState.sex === 'male' ? 5 : -161;
+    const activity = parseFloat(document.getElementById('calc-activity').value);
+    const tdee   = bmr * activity;
+    const target = tdee + GOAL_ADJUST[calcState.goalType];
+
+    document.getElementById('calc-bmr').textContent    = Math.round(bmr).toLocaleString() + ' kcal';
+    document.getElementById('calc-tdee').textContent   = Math.round(tdee).toLocaleString() + ' kcal';
+    document.getElementById('calc-target').textContent = Math.round(target).toLocaleString() + ' kcal';
+    document.getElementById('calc-target-label').textContent = GOAL_LABEL[calcState.goalType];
+
+    calcTarget = Math.round(target);
+    resultEl.hidden = false;
+    applyEl.hidden = false;
+    emptyEl.hidden = true;
+  }
+
+  function applyCalcGoal() {
+    if (!calcTarget) return;
+    const rounded = Math.max(500, Math.round(calcTarget / 10) * 10);
+    document.getElementById('goal-input').value = rounded;
+    goal = rounded;
+    localStorage.setItem(GOAL_KEY, rounded);
+    render();
+    const btn = document.getElementById('calc-apply');
+    btn.textContent = '✓ Daily goal set to ' + rounded.toLocaleString();
+    setTimeout(() => { btn.textContent = 'Set as my daily goal'; }, 2200);
+  }
+
+  function saveCalcState() {
+    const data = {
+      units: calcState.units, sex: calcState.sex, goalType: calcState.goalType,
+      age:      document.getElementById('calc-age').value,
+      weight:   document.getElementById('calc-weight').value,
+      activity: document.getElementById('calc-activity').value,
+      ft: document.getElementById('calc-ft')?.value || '',
+      inch: document.getElementById('calc-in')?.value || '',
+      cm: document.getElementById('calc-cm')?.value || '',
+    };
+    localStorage.setItem(CALC_KEY, JSON.stringify(data));
+  }
+
+  (function loadCalcState() {
+    let data = null;
+    try { data = JSON.parse(localStorage.getItem(CALC_KEY)); } catch (e) {}
+    if (data) {
+      calcState.units    = data.units    || 'imperial';
+      calcState.sex      = data.sex      || 'male';
+      calcState.goalType = data.goalType || 'recomp';
+    }
+    document.querySelectorAll('#calc-units button').forEach(b => b.classList.toggle('active', b.dataset.units === calcState.units));
+    document.querySelectorAll('#calc-sex button').forEach(b => b.classList.toggle('active', b.dataset.sex === calcState.sex));
+    document.querySelectorAll('#calc-goals button').forEach(b => b.classList.toggle('active', b.dataset.goal === calcState.goalType));
+    renderHeightInputs();
+    if (data) {
+      if (data.age)      document.getElementById('calc-age').value = data.age;
+      if (data.weight)   document.getElementById('calc-weight').value = data.weight;
+      if (data.activity) document.getElementById('calc-activity').value = data.activity;
+      if (calcState.units === 'imperial') {
+        if (data.ft)   document.getElementById('calc-ft').value = data.ft;
+        if (data.inch) document.getElementById('calc-in').value = data.inch;
+      } else if (data.cm) {
+        document.getElementById('calc-cm').value = data.cm;
+      }
+    }
+    updateCalc();
+  })();
+
+  (function initSavedGoal() {
+    const saved = parseInt(localStorage.getItem(GOAL_KEY));
+    if (saved >= 500) {
+      goal = saved;
+      document.getElementById('goal-input').value = saved;
+      render();
+    }
   })();
 
   // ── Menu ─────────────────────────────────────────────────────────
@@ -1488,7 +1901,7 @@
 
   function updateGoal() {
     const v = parseInt(document.getElementById('goal-input').value);
-    if (v >= 500) { goal = v; render(); }
+    if (v >= 500) { goal = v; localStorage.setItem('nouri_goal', v); render(); }
   }
 
   function clearAll() { items = []; render(); }
